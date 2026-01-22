@@ -1,0 +1,241 @@
+// ============================================
+// SIDEBAR COMPONENT STYLES
+// ============================================
+
+@import '../../base/variables';
+
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: $sidebar-width;
+  height: 100vh;
+  background-color: $color-bg-primary;
+  border-right: $border-width-thin solid $grey-200;
+  display: flex;
+  flex-direction: column;
+  z-index: $z-index-fixed;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+// ============================================
+// LOGO SECTION
+// ============================================
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-lg $spacing-md;
+  cursor: pointer;
+  transition: background-color $transition-fast;
+  
+  &:hover {
+    background-color: $grey-50;
+  }
+}
+
+.logo-icon-wrapper {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, $color-primary 0%, darken($color-primary, 10%) 100%);
+  border-radius: $border-radius-md;
+  flex-shrink: 0;
+}
+
+.logo-icon {
+  width: 24px;
+  height: 24px;
+  color: $color-bg-primary;
+}
+
+.logo-text {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  white-space: nowrap;
+}
+
+// ============================================
+// NAVIGATION
+// ============================================
+.sidebar-nav {
+  flex: 1;
+  padding: $spacing-md 0;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md $spacing-lg;
+  margin: 0 $spacing-md;
+  border-radius: $border-radius-md;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-secondary;
+  transition: all $transition-base;
+  text-align: left;
+  width: calc(100% - #{$spacing-md * 2});
+  
+  &:hover {
+    background-color: $grey-50;
+    color: $color-text-primary;
+  }
+  
+  &.active {
+    background-color: $color-primary;
+    color: $color-bg-primary;
+    
+    .nav-icon {
+      color: $color-bg-primary;
+    }
+  }
+}
+
+.nav-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: inherit;
+  transition: color $transition-fast;
+}
+
+.nav-text {
+  flex: 1;
+  white-space: nowrap;
+}
+
+// ============================================
+// ADMIN SECTION
+// ============================================
+.admin-section {
+  margin-top: $spacing-md;
+  padding-top: $spacing-md;
+  border-top: $border-width-thin solid $grey-200;
+}
+
+.dropdown-arrow {
+  width: 16px;
+  height: 16px;
+  transition: transform $transition-base;
+  
+  &.open {
+    transform: rotate(180deg);
+  }
+}
+
+.dropdown-menu {
+  margin-top: $spacing-xs;
+  margin-left: $spacing-lg;
+  padding-left: $spacing-md;
+  border-left: 2px solid $grey-200;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $border-radius-sm;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  transition: all $transition-fast;
+  
+  &:hover {
+    background-color: $grey-50;
+    color: $color-text-primary;
+  }
+}
+
+.dropdown-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+// ============================================
+// USER SECTION
+// ============================================
+.sidebar-user {
+  padding: $spacing-md;
+  border-top: $border-width-thin solid $grey-200;
+  background-color: $color-bg-primary;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: $border-radius-full;
+  background: linear-gradient(135deg, $color-primary 0%, darken($color-primary, 10%) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-bg-primary;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-md;
+  flex-shrink: 0;
+}
+
+.user-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-name {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-role {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  text-transform: capitalize;
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  width: 100%;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $border-radius-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: white;
+  transition: all $transition-fast;
+  background-color: red;
+  &:hover {
+    background-color: darkred;
+  }
+}
+
+.logout-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.logout-text {
+  white-space: nowrap;
+}

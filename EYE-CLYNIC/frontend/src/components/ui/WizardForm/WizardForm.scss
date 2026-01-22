@@ -1,0 +1,151 @@
+// ============================================
+// WIZARD FORM STYLES
+// ============================================
+
+@import '../../../styles/base/variables';
+
+.wizard-form {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0; // Allows flex shrinking
+  overflow: hidden;
+}
+
+.wizard-content {
+  flex: 1;
+  padding: $spacing-xl;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0; // Allows flex shrinking
+  max-height: 100%; // Prevent overflow
+  -webkit-overflow-scrolling: touch; // Smooth scrolling on iOS
+  
+  // Custom scrollbar styling
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: $grey-100;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: $grey-300;
+    border-radius: 4px;
+    
+    &:hover {
+      background: $grey-400;
+    }
+  }
+  
+  @media (max-width: 1366px) {
+    padding: $spacing-lg;
+  }
+  
+  @media (max-width: 768px) {
+    padding: $spacing-md;
+  }
+}
+
+.wizard-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-lg $spacing-xl;
+  background-color: $grey-50;
+  border-top: $border-width-thin solid $grey-200;
+  gap: $spacing-md;
+  flex-shrink: 0; // Prevent navigation from shrinking
+  
+  @media (max-width: 768px) {
+    flex-direction: column-reverse;
+    padding: $spacing-md;
+    
+    .wizard-nav-buttons {
+      width: 100%;
+      flex-direction: column;
+      gap: $spacing-sm;
+    }
+  }
+}
+
+.wizard-nav-buttons {
+  display: flex;
+  gap: $spacing-md;
+  flex: 1;
+}
+
+.btn-step {
+  min-width: 120px;
+  padding: $spacing-md $spacing-lg;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  border-radius: $border-radius-md;
+  transition: all $transition-base;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  cursor: pointer;
+  border: none;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+  
+  &.btn-prev {
+    background-color: $color-bg-primary;
+    color: $color-text-primary;
+    border: $border-width-thin solid $grey-300;
+    
+    &:hover:not(:disabled) {
+      background-color: $grey-50;
+      border-color: $color-primary;
+      color: $color-primary;
+    }
+  }
+  
+  &.btn-next {
+    background-color: $color-primary;
+    color: $color-bg-primary;
+    
+    &:hover:not(:disabled) {
+      background-color: $color-primary;
+      transform: translateY(-1px);
+      box-shadow: $shadow-md;
+    }
+  }
+  
+  &.btn-submit {
+    background-color: $color-success;
+    color: $color-bg-primary;
+    
+    &:hover:not(:disabled) {
+      background-color: color-success;
+      transform: translateY(-1px);
+      box-shadow: $shadow-md;
+    }
+  }
+  
+  &.btn-cancel {
+    background-color: red;
+    color: white;
+    
+    &:hover {
+      background-color: darkred;
+
+    }
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

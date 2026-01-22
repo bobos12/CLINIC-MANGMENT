@@ -1,0 +1,16 @@
+// ============================================
+// EDIT PATIENT FORM STYLES
+// Reuses create-patient styles with edit-specific theming
+// ============================================
+
+@import '../../base/variables';
+@import './create-patient';
+
+.form-card {
+  .form-header {
+    background-color: $color-primary;
+    border-radius: $border-radius-xl $border-radius-xl ;
+    margin-bottom: $spacing-xl;
+    padding: $spacing-md;
+  }
+}

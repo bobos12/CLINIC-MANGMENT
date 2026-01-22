@@ -1,0 +1,13 @@
+// ============================================
+// EDIT VISIT FORM STYLES
+// Reuses create-visit styles with edit-specific theming
+// ============================================
+
+@import '../../base/variables';
+@import './create-visit';
+
+.visit-form-card {
+  .form-header {
+    background: $color-primary;
+  }
+}

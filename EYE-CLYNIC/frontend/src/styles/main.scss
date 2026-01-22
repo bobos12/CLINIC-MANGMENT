@@ -1,0 +1,88 @@
+// ============================================
+// MAIN STYLESHEET
+// Import all styles in correct order
+// ============================================
+
+// Import Mulish font from Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;700&display=swap');
+
+// Base styles (variables, reset, typography)
+@import './base/index';
+
+// Component styles
+@import './components/layout/index';
+@import './components/ui/index';
+
+// Page styles
+@import './pages/index';
+
+// Feature styles
+@import './features/index';
+
+// ============================================
+// GLOBAL UTILITIES
+// ============================================
+
+// App Container
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: $color-bg-secondary;
+}
+
+.app-main {
+  flex: 1;
+  margin-left: $sidebar-width;
+  min-height: 100vh;
+  padding-top: $header-height;
+  
+  @media (max-width: 768px) {
+    margin-left: 0;
+  }
+}
+
+// ============================================
+// UTILITY CLASSES
+// ============================================
+
+// Spacing utilities
+.mt-sm { margin-top: $spacing-sm; }
+.mt-md { margin-top: $spacing-md; }
+.mt-lg { margin-top: $spacing-lg; }
+.mt-xl { margin-top: $spacing-xl; }
+
+.mb-sm { margin-bottom: $spacing-sm; }
+.mb-md { margin-bottom: $spacing-md; }
+.mb-lg { margin-bottom: $spacing-lg; }
+.mb-xl { margin-bottom: $spacing-xl; }
+
+.p-sm { padding: $spacing-sm; }
+.p-md { padding: $spacing-md; }
+.p-lg { padding: $spacing-lg; }
+.p-xl { padding: $spacing-xl; }
+
+// Display utilities
+.d-flex { display: flex; }
+.d-grid { display: grid; }
+.d-block { display: block; }
+.d-inline-block { display: inline-block; }
+.d-none { display: none; }
+
+// Flex utilities
+.flex-column { flex-direction: column; }
+.flex-row { flex-direction: row; }
+.align-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.gap-sm { gap: $spacing-sm; }
+.gap-md { gap: $spacing-md; }
+.gap-lg { gap: $spacing-lg; }
+
+// Width utilities
+.w-full { width: 100%; }
+.w-auto { width: auto; }
+
+// Text utilities
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }

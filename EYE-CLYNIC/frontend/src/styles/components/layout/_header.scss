@@ -1,0 +1,145 @@
+// ============================================
+// HEADER COMPONENT STYLES
+// ============================================
+
+@import '../../base/variables';
+
+.header {
+  position: fixed;
+  top: 0;
+  left: $sidebar-width;
+  right: 0;
+  height: $header-height;
+  background-color: $color-bg-primary;
+  border-bottom: $border-width-thin solid $grey-200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 $spacing-xl;
+  z-index: $z-index-sticky;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: $spacing-lg;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+}
+
+// ============================================
+// DEPARTMENT SELECTOR
+// ============================================
+.department-selector {
+  position: relative;
+  min-width: 200px;
+}
+
+.department-select {
+  width: 100%;
+  padding: $spacing-sm $spacing-md;
+  padding-right: $spacing-xl;
+  border: $border-width-thin solid $grey-300;
+  border-radius: $border-radius-md;
+  background-color: $color-bg-primary;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  cursor: pointer;
+  transition: all $transition-fast;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%236B7280' d='M8 10L4 6h8z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right $spacing-sm center;
+  background-size: 16px;
+  
+  &:hover {
+    border-color: $color-primary;
+  }
+  
+  &:focus {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+  }
+  
+  option {
+    padding: $spacing-sm;
+  }
+}
+
+// ============================================
+// USER MENU
+// ============================================
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  cursor: pointer;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $border-radius-md;
+  transition: background-color $transition-fast;
+  
+  &:hover {
+    background-color: $grey-50;
+  }
+}
+
+.user-avatar-header {
+  width: 36px;
+  height: 36px;
+  border-radius: $border-radius-full;
+  background: linear-gradient(135deg, $color-primary 0%, darken($color-primary, 10%) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-bg-primary;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-sm;
+  flex-shrink: 0;
+}
+
+.user-name-header {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+}
+
+.user-menu-arrow {
+  width: 16px;
+  height: 16px;
+  color: $color-text-secondary;
+  transition: transform $transition-fast;
+  
+  &.open {
+    transform: rotate(180deg);
+  }
+}
+
+// ============================================
+// RESPONSIVE
+// ============================================
+@media (max-width: 768px) {
+  .header {
+    left: 0;
+    padding: 0 $spacing-md;
+  }
+  
+  .department-selector {
+    min-width: 150px;
+  }
+  
+  .user-name-header {
+    display: none;
+  }
+}

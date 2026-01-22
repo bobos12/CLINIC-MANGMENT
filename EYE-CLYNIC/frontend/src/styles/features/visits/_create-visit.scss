@@ -1,0 +1,18 @@
+// ============================================
+// CREATE VISIT FORM STYLES
+// Main import file - imports all component styles
+// ============================================
+
+@import '../../base/variables';
+@import '../shared';
+
+// Import base layout and shared styles
+@import 'visit-form-base';
+
+// Import component-specific styles
+@import 'patient-info-step';
+@import 'patient-history-step';
+@import 'visual-acuity-step';
+@import 'prescription-step';
+@import 'eye-examination-step';
+@import 'treatment-step';

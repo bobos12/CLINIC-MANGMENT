@@ -1,0 +1,273 @@
+// ============================================
+// PATIENT INFO STEP STYLES
+// ============================================
+
+@import '../../base/variables';
+
+// ============================================
+// PATIENT SELECTION
+// ============================================
+.patient-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: visible;
+  
+  .form-group {
+    overflow: visible;
+    position: relative;
+  }
+}
+
+.patient-selection-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-sm;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  
+  label {
+    margin: 0;
+    flex: 1;
+    min-width: 150px;
+  }
+}
+
+.btn-reset {
+  padding: $spacing-xs $spacing-md;
+  background: $color-error;
+  color: $color-bg-primary;
+  border: none;
+  border-radius: $border-radius-sm;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all $transition-fast;
+  white-space: nowrap;
+  flex-shrink: 0;
+  
+  &:hover {
+    background: darken($color-error, 5%);
+    box-shadow: $shadow-sm;
+  }
+  
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.patient-selection {
+  position: relative;
+  z-index: 1000; // Higher z-index to ensure dropdown appears above everything
+}
+
+.search-input {
+  width: 100%;
+  padding: $spacing-md;
+  padding-left: $spacing-xl;
+  border: $border-width-thin solid $grey-300;
+  border-radius: $border-radius-md;
+  font-size: $font-size-md;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%239CA3AF' d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04 0.062 0.078 0.098 0.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-0.115-0.098zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left $spacing-md center;
+  background-size: 16px;
+  transition: all $transition-fast;
+  
+  &:focus {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+    outline: none;
+  }
+}
+
+.patient-dropdown {
+  position: fixed; // Fixed positioning to escape parent overflow constraints
+  background-color: $color-bg-primary;
+  border: $border-width-thin solid $grey-300;
+  border-radius: $border-radius-md;
+  box-shadow: $shadow-xl;
+  max-height: min(400px, calc(100vh - 200px)); // Limit to viewport height
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 9999; // Very high z-index to appear above everything
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+  // Position will be set inline via JavaScript
+  
+  // Ensure dropdown doesn't go off-screen on small viewports
+  @media (max-width: 768px) {
+    max-width: calc(100vw - 32px);
+    left: 16px !important;
+    right: 16px !important;
+    width: auto !important;
+  }
+  
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: $grey-100;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: $grey-300;
+    border-radius: 4px;
+    
+    &:hover {
+      background: $grey-400;
+    }
+  }
+}
+
+.patient-option {
+  display: flex;
+  flex-direction: column;
+  padding: $spacing-md;
+  border-bottom: $border-width-thin solid $grey-200;
+  cursor: pointer;
+  transition: all $transition-fast;
+  text-align: left;
+  width: 100%;
+  background: $color-bg-primary;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  border-radius: 0;
+  
+  &:hover {
+    background-color: $grey-50;
+    transform: translateX(2px);
+  }
+  
+  &.selected {
+    background-color: rgba($color-primary, 0.1);
+    border-left: 3px solid $color-primary;
+    font-weight: $font-weight-medium;
+    
+    .patient-name {
+      color: $color-primary;
+      font-weight: $font-weight-bold;
+    }
+  }
+  
+  &.create-new {
+    background-color: $grey-50;
+    font-weight: $font-weight-medium;
+    color: $color-primary;
+    border-top: $border-width-thin solid $grey-200;
+    
+    &:hover {
+      background-color: rgba($color-primary, 0.1);
+    }
+  }
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.patient-dropdown-footer {
+  padding: $spacing-sm $spacing-md;
+  text-align: center;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  background: $grey-50;
+  border-top: $border-width-thin solid $grey-200;
+  font-style: italic;
+}
+
+.patient-name {
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+  font-size: $font-size-md;
+}
+
+.patient-code {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.selected-patient {
+  margin-top: $spacing-md;
+  padding: $spacing-md;
+  background-color: rgba($color-success, 0.1);
+  border: $border-width-thin solid rgba($color-success, 0.3);
+  border-radius: $border-radius-md;
+  color: $color-success;
+  font-size: $font-size-md;
+  
+  strong {
+    color: $color-success;
+    font-weight: $font-weight-bold;
+  }
+  
+  .selected-patient-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: $spacing-md;
+    flex-wrap: wrap;
+  }
+  
+  .btn-reset-inline {
+    flex-shrink: 0;
+    margin: 0;
+  }
+}
+
+.patient-not-found {
+  padding: $spacing-lg;
+  text-align: center;
+  color: $color-text-secondary;
+  
+  p {
+    margin-bottom: $spacing-md;
+  }
+}
+
+.btn-create-new {
+  background-color: $color-primary;
+  color: $color-bg-primary;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $border-radius-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all $transition-fast;
+  border: none;
+  
+  &:hover {
+    background-color: darken($color-primary, 5%);
+    transform: translateY(-1px);
+    box-shadow: $shadow-sm;
+  }
+}
+
+.create-patient-form {
+  margin-top: $spacing-lg;
+  padding: $spacing-lg;
+  background-color: $color-bg-primary;
+  border: 2px dashed $color-primary;
+  border-radius: $border-radius-lg;
+}
+
+.create-patient-title {
+  font-size: $font-size-md;
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+  margin-bottom: $spacing-md;
+}
+
+.inline-form {
+  .form-actions {
+    margin-top: $spacing-md;
+    padding-top: 0;
+    border-top: none;
+  }
+}

@@ -1,0 +1,10 @@
+// ============================================
+// FEATURES INDEX
+// ============================================
+
+// Import shared styles first
+@import './shared';
+
+// Import feature-specific styles
+@import './patients';
+@import './visits';

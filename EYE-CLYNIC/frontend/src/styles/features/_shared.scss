@@ -1,0 +1,250 @@
+// ============================================
+// SHARED FEATURE STYLES
+// Reusable styles for forms and pages
+// ============================================
+
+@import '../base/variables';
+
+// ============================================
+// COMMON FORM STYLES
+// ============================================
+.form-page {
+  min-height: 100vh;
+  padding: $spacing-xl;
+  background-color: $color-bg-secondary;
+}
+
+.form-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-card {
+  background-color: $color-bg-primary;
+  border-radius: $border-radius-xl;
+  border: rgb(0, 0, 0) 1px solid;
+  box-shadow: $shadow-xl;
+  overflow: hidden;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.form-header1{
+  background-color: $color-primary;
+  padding: $spacing-xl;
+  text-align: center;
+  color: $color-bg-primary;
+  border-radius: $border-radius-xl $border-radius-xl ;
+  margin-bottom: $spacing-xl;
+}
+
+.form-title {
+  font-size: $font-size-h2;
+  font-weight: $font-weight-bold;
+  color: $color-bg-primary;
+  margin: 0;
+}
+
+.form-section-title {
+  font-size: $font-size-h3;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  margin: $spacing-xl 0 $spacing-lg 0;
+  padding-bottom: $spacing-md;
+  border-bottom: 2px solid $color-primary;
+}
+
+.form-group {
+  margin-bottom: $spacing-lg;
+  label {
+    display: block;
+    font-size: $font-size-md;
+    font-weight: $font-weight-medium;
+    color: $color-text-primary;
+    margin-bottom: $spacing-sm;
+  }
+  
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: $spacing-md;
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: $border-radius-md;
+    font-size: $font-size-md;
+    color: $color-text-primary;
+    font-family: inherit;
+    transition: all $transition-fast;
+    
+    &::placeholder {
+      color: $color-text-disabled;
+    }
+    
+    &:hover {
+      border-color: $grey-400;
+    }
+    
+    &:focus {
+      border-color: $color-primary;
+      box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+      outline: none;
+    }
+  }
+  
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-md;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-alert {
+  padding: $spacing-md $spacing-lg;
+  margin-bottom: $spacing-lg;
+  border-radius: $border-radius-md;
+  font-size: $font-size-md;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  
+  &.alert-error {
+    background-color: rgba($color-error, 0.1);
+    border: $border-width-thin solid rgba($color-error, 0.2);
+    color: $color-error;
+  }
+  
+  &.alert-success {
+    background-color: rgba($color-success, 0.1);
+    border: $border-width-thin solid rgba($color-success, 0.2);
+    color: $color-success;
+  }
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: $spacing-md;
+  margin-top: $spacing-xl;
+  padding-top: $spacing-lg;
+  border-top: $border-width-thin solid $grey-200;
+  
+  @media (max-width: 768px) {
+    flex-direction: column-reverse;
+    
+    .btn {
+      width: 100%;
+    }
+  }
+}
+
+// ============================================
+// COMMON PAGE STYLES
+// ============================================
+.table-page {
+  min-height: 100vh;
+  padding: $spacing-xl;
+  background-color: $color-bg-secondary;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-xl;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-md;
+  }
+}
+
+.page-title {
+  font-size: $font-size-h1;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  margin: 0;
+}
+
+.page-alert {
+  padding: $spacing-md $spacing-lg;
+  margin-bottom: $spacing-lg;
+  border-radius: $border-radius-md;
+  font-size: $font-size-md;
+  
+  &.error {
+    background-color: rgba($color-error, 0.1);
+    border: $border-width-thin solid rgba($color-error, 0.2);
+    color: $color-error;
+  }
+  
+  &.success {
+    background-color: rgba($color-success, 0.1);
+    border: $border-width-thin solid rgba($color-success, 0.2);
+    color: $color-success;
+  }
+}
+
+.search-bar {
+  margin-bottom: $spacing-lg;
+  
+  .search-input {
+    width: 100%;
+    padding: $spacing-md;
+    padding-left: $spacing-xl;
+    border: $border-width-thin solid $grey-300;
+    border-radius: $border-radius-md;
+    font-size: $font-size-md;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%239CA3AF' d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04 0.062 0.078 0.098 0.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-0.115-0.098zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left $spacing-md center;
+    background-size: 16px;
+    
+    &:focus {
+      border-color: $color-primary;
+      box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+      outline: none;
+    }
+  }
+}
+
+// ============================================
+// LOADING STATE
+// ============================================
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: $spacing-md;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid $grey-200;
+  border-top-color: $color-primary;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

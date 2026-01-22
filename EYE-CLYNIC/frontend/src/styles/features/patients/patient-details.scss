@@ -1,0 +1,129 @@
+@import '../../base/variables';
+
+// ============================================
+// PATIENT DETAILS PAGE
+// ============================================
+
+.details-page {
+  min-height: 100vh;
+  padding: $spacing-xl;
+  background-color: $color-bg-secondary;
+}
+
+.details-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.details-card {
+  background-color: $color-bg-primary;
+  border-radius: $border-radius-xl;
+  border: $border-width-thin solid rgb(0, 0, 0);
+  box-shadow: $shadow-xl;
+  overflow: hidden;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: $spacing-xl;
+}
+
+.details-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-xl;
+  padding-bottom: $spacing-lg;
+  border-bottom: $border-width-medium solid $grey-200;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-md;
+  }
+}
+
+.details-title {
+  font-size: $font-size-h1;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.details-actions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  flex-wrap: wrap;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    
+    .btn {
+      flex: 1;
+      min-width: 120px;
+    }
+  }
+}
+
+.details-section {
+  margin-bottom: $spacing-xl;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.section-title {
+  font-size: $font-size-h3;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  margin: 0 0 $spacing-lg 0;
+  padding-bottom: $spacing-md;
+  border-bottom: $border-width-medium solid $color-primary;
+}
+
+.detail-row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: $spacing-md;
+  padding: $spacing-md 0;
+  border-bottom: $border-width-thin solid $grey-200;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: $spacing-xs;
+  }
+}
+
+.detail-label {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-secondary;
+  
+  @media (max-width: 768px) {
+    font-weight: $font-weight-bold;
+    color: $color-text-primary;
+  }
+}
+
+.detail-value {
+  font-size: $font-size-md;
+  font-weight: $font-weight-regular;
+  color: $color-text-primary;
+  word-break: break-word;
+  
+  &:empty::before {
+    content: '—';
+    color: $color-text-disabled;
+  }
+}

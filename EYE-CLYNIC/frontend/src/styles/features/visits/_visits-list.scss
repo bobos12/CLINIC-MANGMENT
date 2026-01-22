@@ -1,0 +1,47 @@
+// ============================================
+// VISITS LIST STYLES
+// ============================================
+
+@import '../../base/variables';
+@import '../shared';
+
+// ============================================
+// VISITS LIST SPECIFIC STYLES
+// ============================================
+
+.header-title-section {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  flex-wrap: wrap;
+}
+
+.cell-date {
+  color: $color-text-secondary;
+  font-size: $font-size-sm;
+}
+
+.cell-complaint {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: $color-text-secondary;
+}
+
+// ============================================
+// RESPONSIVE
+// ============================================
+@media (max-width: 768px) {
+  .header-title-section {
+    width: 100%;
+    
+    .btn-small {
+      width: 100%;
+    }
+  }
+  
+  .cell-complaint {
+    max-width: 150px;
+  }
+}

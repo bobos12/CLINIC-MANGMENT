@@ -1,0 +1,153 @@
+// ============================================
+// TYPOGRAPHY STYLES
+// Based on Figma Design System
+// ============================================
+
+@import './variables';
+
+// ============================================
+// BASE TYPOGRAPHY
+// ============================================
+body {
+  font-family: $font-family-primary;
+  font-size: $font-size-md;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-normal;
+  color: $color-text-primary;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// ============================================
+// HEADINGS
+// ============================================
+h1, .h1 {
+  font-size: $font-size-h1;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-auto;
+  color: $color-text-primary;
+  margin: 0;
+}
+
+h2, .h2 {
+  font-size: $font-size-h2;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-auto;
+  color: $color-text-primary;
+  margin: 0;
+}
+
+h3, .h3 {
+  font-size: $font-size-h3;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-auto;
+  color: $color-text-primary;
+  margin: 0;
+}
+
+// ============================================
+// BODY TEXT
+// ============================================
+.text-lg {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-auto;
+}
+
+.text-lg-medium {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-auto;
+}
+
+.text-lg-bold {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-auto;
+}
+
+.text-md {
+  font-size: $font-size-md;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-auto;
+}
+
+.text-md-medium {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-auto;
+}
+
+.text-md-bold {
+  font-size: $font-size-md;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-auto;
+}
+
+.text-sm {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-auto;
+}
+
+.text-sm-medium {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-auto;
+}
+
+.text-sm-bold {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-auto;
+}
+
+// ============================================
+// TEXT COLORS
+// ============================================
+.text-primary {
+  color: $color-text-primary;
+}
+
+.text-secondary {
+  color: $color-text-secondary;
+}
+
+.text-tertiary {
+  color: $color-text-tertiary;
+}
+
+.text-disabled {
+  color: $color-text-disabled;
+}
+
+.text-white {
+  color: $color-bg-primary;
+}
+
+// ============================================
+// TEXT UTILITIES
+// ============================================
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+.text-lowercase {
+  text-transform: lowercase;
+}
+
+.text-capitalize {
+  text-transform: capitalize;
+}

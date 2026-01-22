@@ -1,0 +1,202 @@
+// ============================================
+// TABLE COMPONENT STYLES
+// ============================================
+
+@import '../../base/variables';
+
+// ============================================
+// TABLE CONTAINER
+// ============================================
+.table-container,
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: $border-radius-md;
+  background-color: $color-bg-primary;
+}
+
+// ============================================
+// DATA TABLE
+// ============================================
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: $color-bg-primary;
+}
+
+// ============================================
+// TABLE HEADER
+// ============================================
+thead {
+  background-color: $grey-50;
+}
+
+.table-header-row {
+  border-bottom: $border-width-thin solid $grey-200;
+}
+
+.table-header,
+th {
+  padding: $spacing-md $spacing-lg;
+  text-align: left;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+// ============================================
+// TABLE BODY
+// ============================================
+tbody {
+  tr {
+    border-bottom: $border-width-thin solid $grey-200;
+    transition: background-color $transition-fast;
+    
+    &:hover {
+      background-color: $grey-50;
+    }
+    
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+.table-row {
+  &:nth-child(even) {
+    background-color: $grey-50;
+  }
+  
+  &:hover {
+    background-color: $grey-100;
+  }
+}
+
+.table-cell,
+td {
+  padding: $spacing-md $spacing-lg;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  white-space: nowrap;
+  
+  &.cell-name {
+    font-weight: $font-weight-medium;
+  }
+  
+  &.cell-code {
+    font-family: monospace;
+    color: $color-text-secondary;
+  }
+  
+  &.cell-phone {
+    color: $color-text-secondary;
+  }
+  
+  &.cell-age {
+    text-align: center;
+  }
+  
+  &.cell-gender {
+    text-transform: capitalize;
+  }
+  
+  &.cell-actions {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+  
+  &.cell-empty,
+  &.empty-cell {
+    text-align: center;
+    padding: $spacing-2xl;
+    color: $color-text-disabled;
+    
+    svg {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto $spacing-md;
+      opacity: 0.5;
+    }
+    
+    p {
+      font-size: $font-size-md;
+      margin: 0;
+    }
+  }
+}
+
+// ============================================
+// TABLE CARD (for dashboard tables)
+// ============================================
+.table-card {
+  background-color: $color-bg-primary;
+  border-radius: $border-radius-lg;
+  border: $border-width-thin solid $grey-200;
+  overflow: hidden;
+  box-shadow: $shadow-sm;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-lg;
+  border-bottom: $border-width-thin solid $grey-200;
+  background-color: $grey-50;
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  font-size: $font-size-md;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  margin: 0;
+  
+  .title-icon {
+    width: 20px;
+    height: 20px;
+    color: $color-primary;
+  }
+}
+
+.view-all-btn {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-primary;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $border-radius-sm;
+  transition: all $transition-fast;
+  
+  &:hover {
+    background-color: rgba($color-primary, 0.1);
+  }
+}
+
+// ============================================
+// RESPONSIVE TABLE
+// ============================================
+@media (max-width: 768px) {
+  .table-container {
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .data-table {
+    min-width: 600px;
+  }
+  
+  .table-header,
+  .table-cell {
+    padding: $spacing-sm $spacing-md;
+    font-size: $font-size-sm;
+  }
+}

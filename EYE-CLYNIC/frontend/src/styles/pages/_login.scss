@@ -1,0 +1,310 @@
+// ============================================
+// LOGIN PAGE STYLES
+// ============================================
+
+@import '../base/variables';
+
+
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, $color-primary 0%, darken($color-primary, 15%) 100%);
+}
+/* ==============================
+   FIX LOGIN PAGE SHIFT
+   ============================== */
+
+   .login-container {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Disable app layout offsets on login */
+  .login-container {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+  }
+  
+  /* If login is rendered inside .app-main */
+  .app-main .login-container {
+    margin-left: 0 !important;
+    padding-top: 0 !important;
+  }
+  
+
+// ============================================
+// BACKGROUND EFFECTS
+// ============================================
+.login-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.gradient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.3;
+  animation: float 20s ease-in-out infinite;
+}
+
+
+// ============================================
+// LOGIN CONTENT
+// ============================================
+.login-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1200px;
+  padding: $spacing-xl;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-3xl;
+  align-items: center;
+  
+  @media (max-width: 968px) {
+    grid-template-columns: 1fr;
+    gap: $spacing-xl;
+  }
+}
+
+// ============================================
+// LOGO SECTION
+// ============================================
+.logo-section {
+  text-align: center;
+  color: $color-bg-primary;
+  
+  @media (max-width: 968px) {
+    order: 1;
+  }
+}
+
+.logo-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border-radius: $border-radius-xl;
+  margin-bottom: $spacing-lg;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.logo-icon {
+  width: 48px;
+  height: 48px;
+  color: $color-bg-primary;
+}
+
+.brand-title {
+  font-size: 48px;
+  font-weight: $font-weight-bold;
+  color: $color-bg-primary;
+  margin-bottom: $spacing-sm;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.brand-subtitle {
+  font-size: $font-size-lg;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+}
+
+// ============================================
+// FORM CARD
+// ============================================
+.form-card {
+  background-color: $color-bg-primary;
+  border-radius: $border-radius-xl;
+  padding: $spacing-2xl;
+  box-shadow: $shadow-xl;
+  backdrop-filter: blur(10px);
+  
+  @media (max-width: 968px) {
+    order: 2;
+  }
+}
+
+.form-header2 {
+
+  border-radius: $border-radius-xl;
+  margin-bottom: $spacing-xl;
+  text-align: center;
+  margin-bottom: $spacing-xl;
+}
+
+.welcome-text {
+  font-size: $font-size-h2;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-sm;
+}
+
+.subtitle {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+  margin: 0;
+}
+
+// ============================================
+// ERROR ALERT
+// ============================================
+.error-alert {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-md;
+  margin-bottom: $spacing-lg;
+  background-color: rgba($color-error, 0.1);
+  border: $border-width-thin solid rgba($color-error, 0.2);
+  border-radius: $border-radius-md;
+  color: $color-error;
+  font-size: $font-size-sm;
+  
+  .error-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+}
+
+// ============================================
+// LOGIN FORM
+// ============================================
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.input-label {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  
+  
+  .label-icon {
+    width: 18px;
+    height: 18px;
+    color: $color-text-secondary;
+  }
+}
+
+.input-field {
+  padding: $spacing-xl;
+  border: $border-width-thin solid $grey-950;
+  border-radius: $border-radius-md;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  transition: all $transition-fast;
+  
+  &::placeholder {
+    color: $color-text-disabled;
+  }
+  
+  &:focus {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+    outline: none;
+  }
+}
+
+// ============================================
+// SUBMIT BUTTON
+// ============================================
+.submit-button {
+  width: 100%;
+  padding: $spacing-md;
+  background-color: $color-primary;
+  color: $color-bg-primary;
+  border: none;
+  border-radius: $border-radius-md;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all $transition-base;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  
+  &:hover:not(:disabled) {
+    background-color: darken($color-primary, 5%);
+    transform: translateY(-1px);
+    box-shadow: $shadow-md;
+  }
+  
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  &.loading {
+    pointer-events: none;
+  }
+  
+  .button-arrow {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: $color-bg-primary;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+}
+
+// ============================================
+// FORM FOOTER
+// ============================================
+.form-footer {
+  margin-top: $spacing-xl;
+  padding-top: $spacing-lg;
+  border-top: $border-width-thin solid $grey-200;
+}
+
+.secure-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  
+  .badge-icon {
+    width: 16px;
+    height: 16px;
+    color: $color-success;
+  }
+}

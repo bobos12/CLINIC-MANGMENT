@@ -1,0 +1,192 @@
+// ============================================
+// DASHBOARD PAGE STYLES
+// ============================================
+
+@import '../base/variables';
+
+.dashboard {
+  min-height: 100vh;
+  padding: $spacing-xl;
+  background-color: $color-bg-secondary;
+}
+
+// ============================================
+// DASHBOARD HEADER
+// ============================================
+.dashboard-header {
+  margin-bottom: $spacing-xl;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-lg;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-md;
+  }
+}
+
+.header-text {
+  flex: 1;
+}
+
+.dashboard-title {
+  font-size: $font-size-h1;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+}
+
+.dashboard-subtitle {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+  margin: 0;
+  
+  strong {
+    color: $color-text-primary;
+    font-weight: $font-weight-medium;
+  }
+}
+
+// ============================================
+// QUICK ACTIONS
+// ============================================
+.quick-actions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    flex-direction: column;
+    
+    .action-btn {
+      width: 100%;
+    }
+  }
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-md $spacing-lg;
+  border-radius: $border-radius-md;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all $transition-base;
+  border: none;
+  
+  &.primary {
+    background-color: $color-primary;
+    color: $color-bg-primary;
+    
+    &:hover {
+      background-color: darken($color-primary, 5%);
+      transform: translateY(-1px);
+      box-shadow: $shadow-md;
+    }
+  }
+  
+  &.secondary {
+    background-color: $color-secondary;
+    color: $color-bg-primary;
+    
+    &:hover {
+      background-color: darken($color-secondary, 5%);
+      transform: translateY(-1px);
+      box-shadow: $shadow-md;
+    }
+  }
+  
+  .btn-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+// ============================================
+// DASHBOARD ALERT
+// ============================================
+.dashboard-alert {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-md $spacing-lg;
+  margin-bottom: $spacing-lg;
+  background-color: rgba($color-error, 0.1);
+  border: $border-width-thin solid rgba($color-error, 0.2);
+  border-radius: $border-radius-md;
+  color: $color-error;
+  font-size: $font-size-md;
+  
+  .alert-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+}
+
+// ============================================
+// STATS GRID
+// ============================================
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: $spacing-lg;
+  margin-bottom: $spacing-xl;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ============================================
+// TABLES GRID
+// ============================================
+.tables-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: $spacing-lg;
+  
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ============================================
+// LOADING STATE
+// ============================================
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: $spacing-md;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid $grey-200;
+  border-top-color: $color-primary;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-text {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+}

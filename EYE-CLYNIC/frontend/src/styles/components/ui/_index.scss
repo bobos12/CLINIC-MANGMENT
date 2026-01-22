@@ -1,0 +1,11 @@
+// ============================================
+// UI COMPONENTS INDEX
+// ============================================
+
+@import './buttons';
+@import './inputs';
+@import './tables';
+@import './cards';
+@import './forms';
+// Note: Wizard component styles (StepIndicator.scss, WizardForm.scss) 
+// are imported directly in their JSX files, not here

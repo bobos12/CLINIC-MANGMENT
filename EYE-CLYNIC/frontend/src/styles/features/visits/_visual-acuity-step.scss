@@ -1,0 +1,107 @@
+// ============================================
+// VISUAL ACUITY STEP STYLES
+// ============================================
+
+@import '../../base/variables';
+
+// ============================================
+// VISUAL ACUITY
+// ============================================
+.visual-acuity-container {
+  padding: $spacing-xl;
+  background: $grey-50;
+  border-radius: $border-radius-lg;
+  border: $border-width-medium solid $grey-200;
+}
+
+.visual-acuity-label {
+  display: block;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-lg;
+}
+
+.visual-acuity-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: $spacing-sm;
+  
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  }
+  
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.visual-acuity-option {
+  padding: $spacing-lg;
+  background: $color-bg-primary;
+  border: $border-width-medium solid $grey-300;
+  border-radius: $border-radius-md;
+  color: $color-text-primary;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-lg;
+  cursor: pointer;
+  transition: all $transition-fast;
+  
+  &:hover {
+    border-color: $color-primary;
+    box-shadow: $shadow-sm;
+  }
+  
+  &.selected {
+    background: $color-primary;
+    border-color: $color-primary;
+    color: $color-bg-primary;
+    box-shadow: $shadow-md;
+  }
+}
+
+.visual-acuity-summary {
+  margin-top: $spacing-lg;
+  padding: $spacing-lg;
+  background: $color-bg-primary;
+  border-radius: $border-radius-md;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border: $border-width-thin solid $grey-200;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+}
+
+.acuity-display {
+  text-align: center;
+}
+
+.acuity-label {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-xs;
+  font-weight: $font-weight-bold;
+}
+
+.acuity-value {
+  font-size: 24px;
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+}
+
+.acuity-separator {
+  font-size: 24px;
+  color: $grey-300;
+  
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
