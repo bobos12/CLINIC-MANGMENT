@@ -22,15 +22,9 @@ const DashboardPage = () => {
     const fetchDashboardData = async () => {
       try {
         const [patientsRes, visitsRes, usersRes] = await Promise.all([
-          axios.get("http://localhost:5000/api/patients", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get("http://localhost:5000/api/visits", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get("http://localhost:5000/api/users", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
+          apiClient.get("/patients"),
+          apiClient.get("/visits"),
+          apiClient.get("/users"),
         ]);
 
         const patients = patientsRes.data;
