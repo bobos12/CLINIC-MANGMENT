@@ -19,13 +19,13 @@ router.use(protect);
 // Get all users (Admin only)
 router.get("/", authorize("admin"), asyncHandler(getAllUsers));
 
-// Get user by ID
-router.get("/:id", asyncHandler(getUserById));
+// Get user by ID (Admin only; non-admins should use /api/auth/me)
+router.get("/:id", authorize("admin"), asyncHandler(getUserById));
 
-// Update user (Admin or own user)
-router.put("/:id", updateUser);
+// Update user (Admin only; self-updates should use a dedicated endpoint if needed)
+router.put("/:id", authorize("admin"), asyncHandler(updateUser));
 
 // Delete user (Admin only)
-router.delete("/:id", authorize("admin"), deleteUser);
+router.delete("/:id", authorize("admin"), asyncHandler(deleteUser));
 
 module.exports = router;

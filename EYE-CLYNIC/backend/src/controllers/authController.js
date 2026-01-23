@@ -1,10 +1,18 @@
 const User = require('../models/User');
 const generateToken = require('../utils/generateToken');
+const { validatePassword } = require('../utils/validators');
 
 // Register user (Admin only)
 const register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
+
+    if (!validatePassword(password)) {
+      return res.status(400).json({
+        message:
+          'Password must be at least 8 characters and include upper, lower, number and special character',
+      });
+    }
 
     const userExists = await User.findOne({ email });
     if (userExists) {

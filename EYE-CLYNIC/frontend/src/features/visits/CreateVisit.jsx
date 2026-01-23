@@ -24,9 +24,10 @@ const CreateVisit = () => {
 
   // Get patientId from location state if available
   const patientIdFromState = location.state?.patientId;
+  const patientIdFromQuery = new URLSearchParams(location.search).get("patientId");
 
   const [formData, setFormData] = useState({
-    patientId: patientIdFromState || "",
+    patientId: patientIdFromState || patientIdFromQuery || "",
     complaint: {},
     medicalHistory: {},
     surgicalHistory: {},

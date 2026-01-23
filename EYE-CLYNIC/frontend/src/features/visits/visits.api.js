@@ -1,21 +1,19 @@
 /* Visits Feature API - Centralized API calls for visit-related operations */
 
-import axios from "axios";
-
-const API_URL = "http://localhost:5000/api";
+import apiClient from "../../services/apiClient";
 
 /**
  * Fetch all visits with optional filtering
  */
 export const fetchVisits = async (token, filters = {}) => {
   try {
-    const response = await axios.get(`${API_URL}/visits`, {
+    const response = await apiClient.get("/visits", {
       headers: { Authorization: `Bearer ${token}` },
       params: filters,
     });
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || "Failed to fetch visits");
+    throw new Error(error.message || "Failed to fetch visits");
   }
 };
 
@@ -24,12 +22,12 @@ export const fetchVisits = async (token, filters = {}) => {
  */
 export const fetchVisitById = async (token, id) => {
   try {
-    const response = await axios.get(`${API_URL}/visits/${id}`, {
+    const response = await apiClient.get(`/visits/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || "Failed to fetch visit");
+    throw new Error(error.message || "Failed to fetch visit");
   }
 };
 
@@ -38,12 +36,12 @@ export const fetchVisitById = async (token, id) => {
  */
 export const createVisit = async (token, visitData) => {
   try {
-    const response = await axios.post(`${API_URL}/visits`, visitData, {
+    const response = await apiClient.post("/visits", visitData, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || "Failed to create visit");
+    throw new Error(error.message || "Failed to create visit");
   }
 };
 
@@ -52,12 +50,12 @@ export const createVisit = async (token, visitData) => {
  */
 export const updateVisit = async (token, id, visitData) => {
   try {
-    const response = await axios.put(`${API_URL}/visits/${id}`, visitData, {
+    const response = await apiClient.put(`/visits/${id}`, visitData, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || "Failed to update visit");
+    throw new Error(error.message || "Failed to update visit");
   }
 };
 
@@ -66,12 +64,12 @@ export const updateVisit = async (token, id, visitData) => {
  */
 export const deleteVisit = async (token, id) => {
   try {
-    const response = await axios.delete(`${API_URL}/visits/${id}`, {
+    const response = await apiClient.delete(`/visits/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || "Failed to delete visit");
+    throw new Error(error.message || "Failed to delete visit");
   }
 };
 
@@ -80,16 +78,11 @@ export const deleteVisit = async (token, id) => {
  */
 export const fetchPatientVisits = async (token, patientId) => {
   try {
-    const response = await axios.get(
-      `${API_URL}/patients/${patientId}/visits`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    const response = await apiClient.get(`/patients/${patientId}/visits`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     return response.data;
   } catch (error) {
-    throw new Error(
-      error.response?.data?.message || "Failed to fetch patient visits"
-    );
+    throw new Error(error.message || "Failed to fetch patient visits");
   }
 };

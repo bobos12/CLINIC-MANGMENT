@@ -26,11 +26,20 @@ exports.getUserById = async (req, res) => {
 // Update user
 exports.updateUser = async (req, res) => {
   try {
-    const { name, phone, role } = req.body;
+    const update = {
+      name: req.body.name,
+      phone: req.body.phone,
+    };
+
+    // Only admins are allowed to change roles (enforced in routes as well)
+    if (req.user?.role === "admin" && typeof req.body.role === "string") {
+      update.role = req.body.role;
+    }
+
     const user = await User.findByIdAndUpdate(
       req.params.id,
-      { name, phone, role },
-      { new: true }
+      update,
+      { new: true, runValidators: true }
     ).select("-password");
 
     if (!user) {

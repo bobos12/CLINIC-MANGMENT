@@ -89,6 +89,15 @@ const visitSchema = new mongoose.Schema({
   },
   followUpDate: {
     type: Date
+  },
+  // Soft-delete flags for medical record safety
+  isDeleted: {
+    type: Boolean,
+    default: false,
+    index: true,
+  },
+  deletedAt: {
+    type: Date,
   }
   // timestamps (createdAt, updatedAt) added automatically
 }, {

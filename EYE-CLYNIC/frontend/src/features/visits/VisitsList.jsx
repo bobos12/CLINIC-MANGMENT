@@ -111,7 +111,9 @@ const VisitsList = () => {
         </div>
         <button
           className="btn-primary"
-          onClick={() => navigate("/visits/create")}
+          onClick={() =>
+            navigate("/visits/create", patientIdFilter ? { state: { patientId: patientIdFilter } } : undefined)
+          }
         >
           + New Visit
         </button>

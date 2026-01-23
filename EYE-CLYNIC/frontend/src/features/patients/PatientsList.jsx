@@ -118,6 +118,14 @@ const PatientsList = () => {
                     </button>
                     <button
                       className="btn-small btn-secondary"
+                      onClick={() =>
+                        navigate("/visits/create", { state: { patientId: patient._id } })
+                      }
+                    >
+                      ➕ Visit
+                    </button>
+                    <button
+                      className="btn-small btn-secondary"
                       onClick={() => navigate(`/visits?patientId=${patient._id}`)}
                     >
                       📋 Visits

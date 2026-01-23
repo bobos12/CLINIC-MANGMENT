@@ -29,6 +29,15 @@ const patientSchema = new mongoose.Schema({
     type: String,
     enum: ['male', 'female', 'other'],
     default: 'other'
+  },
+  // Soft-delete flags for medical record safety
+  isDeleted: {
+    type: Boolean,
+    default: false,
+    index: true,
+  },
+  deletedAt: {
+    type: Date,
   }
   // timestamps (createdAt, updatedAt) added automatically
 }, {

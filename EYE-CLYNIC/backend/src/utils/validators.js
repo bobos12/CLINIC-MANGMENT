@@ -4,7 +4,11 @@ const validateEmail = (email) => {
 };
 
 const validatePassword = (password) => {
-  return password && password.length >= 6;
+  if (!password) return false;
+  // At least 8 chars, one upper, one lower, one number, one special character
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+  return passwordRegex.test(password);
 };
 
 const validatePhone = (phone) => {

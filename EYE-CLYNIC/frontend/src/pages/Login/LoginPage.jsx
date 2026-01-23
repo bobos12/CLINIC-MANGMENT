@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import axios from "axios";
+import { login as apiLogin } from "../../services/apiClient";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -21,26 +21,11 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted", email, password);
     setError("");
     setIsLoading(true);
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
-        { email, password }
-      );
-
-      const user = {
-        _id: response.data._id,
-        name: response.data.name,
-        email: response.data.email,
-        role: response.data.role,
-      };
-      const token = response.data.token;
-
-      console.log("Mapped user & token:", user, token);
-
+      const { user, token } = await apiLogin(email, password);
       login(user, token);
       navigate("/dashboard");
     } catch (err) {

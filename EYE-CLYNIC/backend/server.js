@@ -6,6 +6,17 @@ const path = require('path');
 
 const app = express();
 
+// Critical environment checks
+if (!process.env.MONGODB_URI) {
+  console.error('❌ MONGODB_URI is not defined in .env file');
+  process.exit(1);
+}
+
+if (!process.env.JWT_SECRET) {
+  console.error('❌ JWT_SECRET is not defined in environment');
+  process.exit(1);
+}
+
 // CORS configuration
 const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000', 'http://localhost:5173'];
 app.use(cors({
@@ -22,13 +33,7 @@ app.use(cors({
 app.use(express.json());
 
 // Connect to MongoDB Atlas
-const mongoURI = process.env.MONGODB_URI;
-if (!mongoURI) {
-  console.error('❌ MONGODB_URI is not defined in .env file');
-  process.exit(1);
-}
-
-mongoose.connect(mongoURI)
+mongoose.connect(process.env.MONGODB_URI)
 .then(() => {
   console.log('✅ MongoDB Atlas Connected');
 })

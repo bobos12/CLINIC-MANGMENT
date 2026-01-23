@@ -56,11 +56,12 @@ const PatientInfoStep = ({ formData, setFormData, token, currentStep }) => {
       try {
         const patient = await fetchPatientById(token, formData.patientId);
         setSelectedPatientInfo(patient);
+        setSearchTerm(patient.name); // Set searchTerm to display pre-selected patient's name
       } catch (err) {
         console.error("Failed to load selected patient:", err);
+        // Optionally, set an error state here to inform the user
       }
     };
-
     loadSelectedPatient();
   }, [formData.patientId, token]);
 
