@@ -57,7 +57,7 @@
     cursor: not-allowed;
   }
   &:hover:not(:disabled) {
-    background-color: darken($color-primary, 5%);
+    background-color: $color-primary;
     transform: translateY(-1px);
     box-shadow: $shadow-md;
   }
@@ -79,7 +79,7 @@
   padding: $spacing-md $spacing-lg;
   
   &:hover:not(:disabled) {
-    background-color: darken($color-secondary, 5%);
+    background-color: $color-secondary;
     transform: translateY(-1px);
     box-shadow: $shadow-md;
   }
