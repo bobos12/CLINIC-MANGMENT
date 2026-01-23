@@ -103,11 +103,20 @@ app.use((err, req, res, next) => {
 
 // Start server
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`🌐 Environment: ${process.env.NODE_ENV}`);
-  console.log(`📁 API Base URL: http://localhost:${PORT}/api`);
-  console.log(`🔐 MongoDB: ${mongoose.connection.readyState === 1 ? 'Connected' : 'Connecting...'}`);
+  console.log(`🌐 Environment: ${process.env.NODE_ENV || "development"}`);
+  console.log(
+    `🔐 MongoDB: ${
+      mongoose.connection.readyState === 1 ? "Connected" : "Connecting..."
+    }`
+  );
+
+  if (process.env.NODE_ENV !== "production") {
+    console.log(`📁 API Base URL: http://localhost:${PORT}/api`);
+  }
+
   console.log(`\n📋 Available Endpoints:`);
   console.log(`   POST /api/auth/login`);
   console.log(`   GET  /api/health`);
