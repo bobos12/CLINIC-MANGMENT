@@ -2,6 +2,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import apiClient from "../../services/apiClient";
 
 const DashboardPage = () => {
   const { user, token } = useAuth();
