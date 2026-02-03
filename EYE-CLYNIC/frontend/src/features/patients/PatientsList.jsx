@@ -19,8 +19,8 @@ const PatientsList = () => {
 
     try {
       const data = await fetchPatients(token);
-      setPatients(data);
-      setFilteredPatients(data);
+      setPatients(Array.isArray(data) ? data : []);
+      setFilteredPatients(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error(err);
       setError(err.message || "Failed to fetch patients");

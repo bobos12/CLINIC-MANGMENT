@@ -1,9 +1,123 @@
 // ============================================
 // SIDEBAR COMPONENT STYLES
+// Mobile: collapsible drawer with overlay
+// Desktop: fixed sidebar
 // ============================================
 
 @import '../../base/variables';
 
+// --------------------------------------------
+// MOBILE TOP BAR (hamburger + logo)
+// Visible only below $breakpoint-sm; provides touch target to open drawer
+// --------------------------------------------
+.mobile-topbar {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background-color: $color-bg-primary;
+  border-bottom: $border-width-thin solid $grey-200;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 $spacing-md;
+  z-index: $z-index-fixed - 1; // Below sidebar so sidebar overlays
+  box-shadow: $shadow-sm;
+
+  @media (max-width: $breakpoint-sm) {
+    display: flex;
+  }
+}
+
+.mobile-menu-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: $touch-target-min;
+  height: $touch-target-min;
+  border-radius: $border-radius-md;
+  color: $color-text-primary;
+  transition: background-color $transition-fast;
+
+  &:hover {
+    background-color: $grey-100;
+  }
+  &:focus-visible {
+    outline: 2px solid $color-primary;
+    outline-offset: 2px;
+  }
+}
+
+.hamburger-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.mobile-topbar-logo {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  min-height: $touch-target-min;
+  padding: 0 $spacing-sm;
+}
+
+.mobile-logo-text {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+}
+
+.mobile-topbar-user {
+  width: $touch-target-min;
+  height: $touch-target-min;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: $border-radius-full;
+  background: linear-gradient(135deg, $color-primary 0%, darken($color-primary, 10%) 100%);
+  color: $color-bg-primary;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-sm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// --------------------------------------------
+// OVERLAY (mobile only – dims content when drawer is open)
+// Must sit BELOW the sidebar so sidebar nav remains clickable.
+// --------------------------------------------
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: $z-index-sticky; // Below sidebar ($z-index-fixed) so drawer is on top
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity $transition-base, visibility $transition-base;
+
+  @media (max-width: $breakpoint-sm) {
+    display: block;
+  }
+
+  &.sidebar-overlay--open {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+// --------------------------------------------
+// SIDEBAR (drawer on mobile, fixed on desktop)
+// --------------------------------------------
 .sidebar {
   position: fixed;
   left: 0;
@@ -17,6 +131,49 @@
   z-index: $z-index-fixed;
   overflow-y: auto;
   overflow-x: hidden;
+  transition: transform $transition-base;
+  // For mobile close button positioning
+  isolation: isolate;
+
+  @media (max-width: $breakpoint-sm) {
+    width: min(100vw - 48px, $sidebar-width);
+    max-width: $sidebar-width;
+    transform: translateX(-100%);
+    box-shadow: $shadow-xl;
+
+    &.sidebar--open {
+      transform: translateX(0);
+    }
+  }
+}
+
+// Close button inside sidebar (mobile only) – touch-friendly
+.sidebar-close-btn {
+  display: none;
+  position: absolute;
+  top: $spacing-md;
+  right: $spacing-md;
+  width: $touch-target-min;
+  height: $touch-target-min;
+  align-items: center;
+  justify-content: center;
+  border-radius: $border-radius-md;
+  color: $color-text-secondary;
+  transition: background-color $transition-fast, color $transition-fast;
+
+  &:hover {
+    background-color: $grey-100;
+    color: $color-text-primary;
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  @media (max-width: $breakpoint-sm) {
+    display: flex;
+  }
 }
 
 // ============================================

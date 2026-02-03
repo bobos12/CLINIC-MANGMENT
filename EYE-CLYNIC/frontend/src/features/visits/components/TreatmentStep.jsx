@@ -1,7 +1,25 @@
 // ============================================
 // TREATMENT STEP COMPONENT
-// Step 4: Treatment & Follow-up
+// Step 6: Treatment & Follow-up
 // ============================================
+
+import { DURATION_LIMITS } from "../visits.constants";
+
+const defaultFollowUpObject = {
+  years: "",
+  months: "",
+  days: "",
+};
+
+const clampDuration = (field, value) => {
+  const num = value === "" ? "" : Number(value);
+  if (num === "") return "";
+  const limits = DURATION_LIMITS[field];
+  if (!limits) return num;
+  let clamped = Math.max(Number(limits.min) ?? 0, num);
+  if (limits.max != null) clamped = Math.min(limits.max, clamped);
+  return clamped;
+};
 
 const TreatmentStep = ({ formData, setFormData, currentStep }) => {
   const handleChange = (e) => {
@@ -12,10 +30,50 @@ const TreatmentStep = ({ formData, setFormData, currentStep }) => {
     }));
   };
 
+  // Update follow-up duration (with validation to match backend)
+  const handleFollowUpChange = (field, value) => {
+    const finalValue = clampDuration(field, value);
+    setFormData((prev) => ({
+      ...prev,
+      followUp: {
+        ...(prev.followUp || defaultFollowUpObject),
+        [field]: finalValue,
+      },
+    }));
+  };
+
+  // Render years/months/days inputs with backend-aligned limits
+  const renderFollowUpInputs = () => (
+    <div className="duration-inputs">
+      {["years", "months", "days"].map((field) => {
+        const limits = DURATION_LIMITS[field];
+        return (
+          <div key={field} className="duration-item">
+            <label className="duration-label">
+              {field.charAt(0).toUpperCase() + field.slice(1)}
+              {limits?.max != null && (
+                <span className="duration-hint"> (max {limits.max})</span>
+              )}
+            </label>
+            <input
+              type="number"
+              min={limits?.min ?? 0}
+              max={limits?.max ?? undefined}
+              placeholder="0"
+              value={formData.followUp?.[field] ?? ""}
+              onChange={(e) => handleFollowUpChange(field, e.target.value)}
+            />
+          </div>
+        );
+      })}
+    </div>
+  );
+
   return (
-    <div className={`step-content ${currentStep === 6 ? 'active' : ''}`}>
+    <div className={`step-content ${currentStep === 6 ? "active" : ""}`}>
       <h2 className="step-title">💊 Treatment Plan & Follow-up</h2>
 
+      {/* ================= Recommendations / Treatment ================= */}
       <div className="treatment-section">
         <label className="form-group-label">Recommendations & Treatment</label>
         <textarea
@@ -24,24 +82,17 @@ const TreatmentStep = ({ formData, setFormData, currentStep }) => {
           value={formData.recommendations}
           onChange={handleChange}
           placeholder="Enter treatment recommendations, medications, instructions..."
-          className="treatment-textarea"
           rows={8}
         ></textarea>
       </div>
 
+      {/* ================= Follow-up Duration ================= */}
       <div className="treatment-section">
-        <label className="form-group-label">Follow-up Date</label>
-        <input
-          id="followUpDate"
-          type="date"
-          name="followUpDate"
-          value={formData.followUpDate}
-          onChange={handleChange}
-          className="treatment-date-input"
-        />
+        <label className="form-group-label">Follow-up Period</label>
+        {renderFollowUpInputs()}
       </div>
 
-      {/* Summary of Visit */}
+      {/* ================= Summary of Visit ================= */}
       <div className="visit-summary">
         <h3 className="visit-summary-title">📋 Visit Summary</h3>
         <div className="visit-summary-content">
@@ -52,7 +103,10 @@ const TreatmentStep = ({ formData, setFormData, currentStep }) => {
           <div className="summary-item">
             <strong>Medical History:</strong>{" "}
             {Object.keys(formData.medicalHistory)
-              .map((k) => `${k} (${formData.medicalHistory[k]}y)`)
+              .map(
+                (k) =>
+                  `${k} (${formData.medicalHistory[k]?.years || 0}y ${formData.medicalHistory[k]?.months || 0}m ${formData.medicalHistory[k]?.days || 0}d)`
+              )
               .join(", ") || "None"}
           </div>
           <div className="summary-item">
@@ -70,6 +124,12 @@ const TreatmentStep = ({ formData, setFormData, currentStep }) => {
             OS: {formData.eyeExam.refraction.OS?.sphere || "—"} /{" "}
             {formData.eyeExam.refraction.OS?.cylinder || "—"} ×{" "}
             {formData.eyeExam.refraction.OS?.axis || "—"}
+          </div>
+          <div className="summary-item">
+            <strong>Follow-up Period:</strong>{" "}
+            {formData.followUp
+              ? `${formData.followUp.years || 0}y ${formData.followUp.months || 0}m ${formData.followUp.days || 0}d`
+              : "Not set"}
           </div>
         </div>
       </div>

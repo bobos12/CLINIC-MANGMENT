@@ -11,7 +11,13 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: $spacing-lg;
-  
+
+  // Inside eye panels (OD/OS sides), single column so content fits
+  .eye-side & {
+    grid-template-columns: 1fr;
+    gap: $spacing-md;
+  }
+
   @media (max-width: 1024px) {
     grid-template-columns: 1fr;
   }
@@ -47,7 +53,7 @@
     grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: $breakpoint-sm) {
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   }
   

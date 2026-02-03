@@ -28,9 +28,9 @@ const DashboardPage = () => {
           apiClient.get("/users"),
         ]);
 
-        const patients = patientsRes.data;
-        const visits = visitsRes.data;
-        const users = usersRes.data;
+        const patients = Array.isArray(patientsRes.data) ? patientsRes.data : [];
+        const visits = Array.isArray(visitsRes.data) ? visitsRes.data : [];
+        const users = Array.isArray(usersRes.data) ? usersRes.data : [];
 
         setStats({
           patients: patients.length,

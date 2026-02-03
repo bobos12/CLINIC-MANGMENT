@@ -39,12 +39,14 @@
     }
   }
   
-  @media (max-width: 1366px) {
+  @media (max-width: $breakpoint-md) {
     padding: $spacing-lg;
   }
-  
-  @media (max-width: 768px) {
+  @media (max-width: $breakpoint-sm) {
     padding: $spacing-md;
+  }
+  @media (max-width: $breakpoint-xs) {
+    padding: $spacing-sm;
   }
 }
 
@@ -58,10 +60,11 @@
   gap: $spacing-md;
   flex-shrink: 0; // Prevent navigation from shrinking
   
-  @media (max-width: 768px) {
+  @media (max-width: $breakpoint-sm) {
     flex-direction: column-reverse;
     padding: $spacing-md;
-    
+    gap: $spacing-sm;
+
     .wizard-nav-buttons {
       width: 100%;
       flex-direction: column;
@@ -73,11 +76,12 @@
 .wizard-nav-buttons {
   display: flex;
   gap: $spacing-md;
-  flex: 1;
+  justify-content: flex-end;
 }
 
 .btn-step {
   min-width: 120px;
+  min-height: $touch-target-min;
   padding: $spacing-md $spacing-lg;
   font-size: $font-size-md;
   font-weight: $font-weight-medium;
@@ -89,8 +93,8 @@
   gap: $spacing-sm;
   cursor: pointer;
   border: none;
-  
-  @media (max-width: 768px) {
+
+  @media (max-width: $breakpoint-sm) {
     width: 100%;
     min-width: auto;
   }
@@ -101,14 +105,14 @@
   }
   
   &.btn-prev {
-    background-color: $color-bg-primary;
-    color: $color-text-primary;
+    background-color: $color-primary;
+    color: white;
     border: $border-width-thin solid $grey-300;
     
     &:hover:not(:disabled) {
-      background-color: $grey-50;
+      
       border-color: $color-primary;
-      color: $color-primary;
+      
     }
   }
   
@@ -128,7 +132,7 @@
     color: $color-bg-primary;
     
     &:hover:not(:disabled) {
-      background-color: color-success;
+      background-color: $color-success;
       transform: translateY(-1px);
       box-shadow: $shadow-md;
     }

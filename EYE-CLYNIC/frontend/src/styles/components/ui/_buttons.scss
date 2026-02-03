@@ -35,7 +35,7 @@
 }
 
 // ============================================
-// PRIMARY BUTTON
+// PRIMARY BUTTON – touch-friendly min height
 // ============================================
 .btn-primary,
 .btn-submit {
@@ -44,6 +44,7 @@
   border: $border-width-thin solid $color-primary;
   border-radius: $border-radius-md;
   padding: $spacing-md $spacing-lg;
+  min-height: $touch-target-min;
   font-size: $font-size-md;
   font-weight: $font-weight-medium;
   line-height: 1;
@@ -51,6 +52,10 @@
   transition: all $transition-base;
   border: none;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
 
   &:disabled {
     opacity: 0.6;
@@ -61,10 +66,14 @@
     transform: translateY(-1px);
     box-shadow: $shadow-md;
   }
-  
+
   &:active:not(:disabled) {
     transform: translateY(0);
     box-shadow: $shadow-sm;
+  }
+
+  @media (max-width: $breakpoint-sm) {
+    width: 100%;
   }
 }
 
@@ -166,16 +175,26 @@
 }
 
 // ============================================
-// BUTTON SIZES
+// BUTTON SIZES – touch-friendly on mobile
 // ============================================
 .btn-sm,
 .btn-small {
   padding: $spacing-xs $spacing-md;
+  min-height: 36px;
   font-size: $font-size-sm;
-  
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-xs;
+
   svg {
     width: 14px;
     height: 14px;
+  }
+
+  @media (min-width: $breakpoint-xs) {
+    min-height: $touch-target-min;
+    padding: $spacing-sm $spacing-md;
   }
 }
 

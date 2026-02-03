@@ -30,25 +30,36 @@ exports.getVisitById = async (req, res) => {
   }
 };
 
-// Create visit - minimal required fields
+// Create visit - accepts full visit payload from frontend
 exports.createVisit = async (req, res) => {
   try {
-    const { patientId, eyeExam, complaint, recommendations, followUpDate } = req.body;
+    const {
+      patientId,
+      complaint,
+      medicalHistory,
+      surgicalHistory,
+      eyeExam,
+      recommendations,
+      followUp,
+      followUpDate
+    } = req.body;
 
     if (!patientId) {
       return res.status(400).json({ message: "patientId is required" });
     }
 
-    // doctorId comes from authenticated user
     const doctorId = req.user._id;
 
     const visit = new Visit({
       patientId,
       doctorId,
-      complaint,
-      eyeExam,
-      recommendations,
-      followUpDate,
+      complaint: complaint || {},
+      medicalHistory: medicalHistory || {},
+      surgicalHistory: surgicalHistory || {},
+      eyeExam: eyeExam || {},
+      recommendations: recommendations || '',
+      followUp: followUp || undefined,
+      followUpDate: followUpDate ? new Date(followUpDate) : undefined,
       visitDate: new Date()
     });
 
@@ -67,12 +78,34 @@ exports.createVisit = async (req, res) => {
   }
 };
 
-// Update visit
+// Update visit - allow only visit data fields (exclude __v, timestamps, doctorId from body)
 exports.updateVisit = async (req, res) => {
   try {
+    const {
+      patientId,
+      complaint,
+      medicalHistory,
+      surgicalHistory,
+      eyeExam,
+      recommendations,
+      followUp,
+      followUpDate
+    } = req.body;
+
+    const updateData = {
+      ...(patientId !== undefined && { patientId }),
+      ...(complaint !== undefined && { complaint }),
+      ...(medicalHistory !== undefined && { medicalHistory }),
+      ...(surgicalHistory !== undefined && { surgicalHistory }),
+      ...(eyeExam !== undefined && { eyeExam }),
+      ...(recommendations !== undefined && { recommendations }),
+      ...(followUp !== undefined && { followUp }),
+      ...(followUpDate !== undefined && { followUpDate: followUpDate ? new Date(followUpDate) : null })
+    };
+
     const visit = await Visit.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      updateData,
       { new: true, runValidators: true }
     )
       .populate("patientId", "name phone code")

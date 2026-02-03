@@ -1,21 +1,37 @@
 import { useState } from "react";
-import { EYE_EXAM_FIELD_OPTIONS } from "../visits.constants";
+import { EYE_EXAM_FIELD_OPTIONS, IOP_LIMITS } from "../visits.constants";
+
+const EYE_EXAM_FIELDS = [
+  "externalAppearance",
+  "ocularMotility",
+  "eyelid",
+  "conjunctiva",
+  "cornea",
+  "sclera",
+  "anteriorChamber",
+  "iris",
+  "pupil",
+  "lens",
+  "posteriorSegment",
+];
+
+const formatFieldLabel = (field) =>
+  field.replace(/([A-Z])/g, " $1").replace(/^./, (s) => s.toUpperCase()).trim();
 
 const EyeExaminationStep = ({ formData, setFormData, currentStep }) => {
-  const [activeEye, setActiveEye] = useState("OD");
+  const [expandedFields, setExpandedFields] = useState({}); // key: `${field}-${eye}`
 
-  // ===============================
-  // Toggle option (multi-select)
-  // ===============================
+  const toggleField = (field, eye) => {
+    const key = `${field}-${eye}`;
+    setExpandedFields((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
+
   const toggleEyeExamOption = (field, eye, option) => {
     setFormData((prev) => {
-      const current =
-        prev.eyeExam[field]?.[eye]?.values || [];
-
+      const current = prev.eyeExam[field]?.[eye]?.values || [];
       const updatedValues = current.includes(option)
         ? current.filter((v) => v !== option)
         : [...current, option];
-
       return {
         ...prev,
         eyeExam: {
@@ -32,9 +48,6 @@ const EyeExaminationStep = ({ formData, setFormData, currentStep }) => {
     });
   };
 
-  // ===============================
-  // Update "Other" text
-  // ===============================
   const updateOtherText = (field, eye, value) => {
     setFormData((prev) => ({
       ...prev,
@@ -51,111 +64,105 @@ const EyeExaminationStep = ({ formData, setFormData, currentStep }) => {
     }));
   };
 
+  const updateIOP = (eye, value) => {
+    if (value === "") {
+      setFormData((prev) => ({
+        ...prev,
+        eyeExam: {
+          ...prev.eyeExam,
+          iop: { ...prev.eyeExam.iop, [eye]: "" },
+        },
+      }));
+      return;
+    }
+    const num = Number(value);
+    if (Number.isNaN(num)) return;
+    const clamped = Math.max(IOP_LIMITS.min, Math.min(IOP_LIMITS.max, num));
+    setFormData((prev) => ({
+      ...prev,
+      eyeExam: {
+        ...prev.eyeExam,
+        iop: { ...prev.eyeExam.iop, [eye]: clamped },
+      },
+    }));
+  };
+
+  const renderOptionField = (field, label, eye) => {
+    const selected = formData.eyeExam[field]?.[eye]?.values || [];
+    const key = `${field}-${eye}`;
+    const isOpen = expandedFields[key];
+
+    return (
+      <div key={key} className="exam-field-card">
+        <div
+          className="exam-field-header"
+          onClick={() => toggleField(field, eye)}
+          style={{ cursor: "pointer", fontWeight: "bold" }}
+        >
+          {label} {isOpen ? "▲" : "▼"}
+        </div>
+        {isOpen && (
+          <div className="exam-field-content">
+            <div className="exam-options-grid">
+              {EYE_EXAM_FIELD_OPTIONS[field].map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  className={`exam-option-btn ${selected.includes(option) ? "selected" : ""}`}
+                  onClick={() => toggleEyeExamOption(field, eye, option)}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+            <textarea
+              className="exam-textarea"
+              rows={2}
+              placeholder="Other notes..."
+              value={formData.eyeExam[field]?.[eye]?.other || ""}
+              onChange={(e) => updateOtherText(field, eye, e.target.value)}
+            />
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const EyePanel = ({ eye, label }) => (
+    <div className={`eye-side eye-side-${eye.toLowerCase()}`}>
+      <h3 className="eye-side-header">👁️ {eye} ({label})</h3>
+
+      <div className="exam-field-card">
+        <label className="exam-field-title">
+          IOP (0–{IOP_LIMITS.max} mmHg)
+        </label>
+        <input
+          type="number"
+          min={IOP_LIMITS.min}
+          max={IOP_LIMITS.max}
+          step="1"
+          className="exam-input"
+          placeholder="mmHg"
+          value={formData.eyeExam.iop?.[eye] ?? ""}
+          onChange={(e) => updateIOP(eye, e.target.value)}
+        />
+      </div>
+
+      <div className="eye-exam-grid">
+        {EYE_EXAM_FIELDS.map((field) =>
+          renderOptionField(field, formatFieldLabel(field), eye)
+        )}
+      </div>
+    </div>
+  );
+
   return (
     <div className={`step-content ${currentStep === 5 ? "active" : ""}`}>
       <h2 className="step-title">🔬 Detailed Eye Examination</h2>
 
-      {/* Eye Toggle */}
-      <div className="eye-toggle-container">
-        {["OD", "OS"].map((eye) => (
-          <button
-            key={eye}
-            type="button"
-            className={`eye-toggle-btn ${
-              activeEye === eye ? "active" : ""
-            }`}
-            onClick={() => setActiveEye(eye)}
-          >
-            👁️ {eye} ({eye === "OD" ? "Right" : "Left"} Eye)
-          </button>
-        ))}
-      </div>
-
-      {/* OPTION FIELDS */}
-      <div className="eye-exam-grid">
-        {[
-          { field: "ocularMotility", label: "Ocular Motility" },
-          { field: "eyelid", label: "Eyelid" },
-          { field: "conjunctiva", label: "Conjunctiva" },
-          { field: "cornea", label: "Cornea" },
-          { field: "anteriorChamber", label: "Anterior Chamber" },
-          { field: "pupil", label: "Pupil" },
-          { field: "lens", label: "Lens" },
-        ].map(({ field, label }) => {
-          const selected =
-            formData.eyeExam[field]?.[activeEye]?.values || [];
-
-          return (
-            <div key={field} className="exam-field-card">
-              <label className="exam-field-title">{label}</label>
-
-              <div className="exam-options-grid">
-                {EYE_EXAM_FIELD_OPTIONS[field].map((option) => (
-                  <button
-                    key={option}
-                    type="button"
-                    className={`exam-option-btn ${
-                      selected.includes(option) ? "selected" : ""
-                    }`}
-                    onClick={() =>
-                      toggleEyeExamOption(field, activeEye, option)
-                    }
-                  >
-                    {option}
-                  </button>
-                ))}
-              </div>
-
-              {/* OTHER FIELD */}
-              <textarea
-                className="exam-textarea"
-                rows={2}
-                placeholder="Other notes..."
-                value={
-                  formData.eyeExam[field]?.[activeEye]?.other || ""
-                }
-                onChange={(e) =>
-                  updateOtherText(field, activeEye, e.target.value)
-                }
-              />
-            </div>
-          );
-        })}
-
-        {/* PURE TEXT FIELDS */}
-        {[
-          { field: "externalAppearance", label: "External Appearance" },
-          { field: "sclera", label: "Sclera" },
-          { field: "iris", label: "Iris" },
-          { field: "posteriorSegment", label: "Posterior Segment" },
-          { field: "others", label: "Others" },
-        ].map(({ field, label }) => (
-          <div key={field} className="exam-field-card">
-            <label className="exam-field-title">{label}</label>
-            <textarea
-              className="exam-textarea"
-              rows={3}
-              value={
-                formData.eyeExam[field]?.[activeEye] || ""
-              }
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  eyeExam: {
-                    ...prev.eyeExam,
-                    [field]: {
-                      ...prev.eyeExam[field],
-                      [activeEye]: e.target.value,
-                    },
-                  },
-                }))
-              }
-              placeholder={`Notes for ${
-                activeEye === "OD" ? "right" : "left"
-              } eye...`}
-            />
-          </div>
-        ))}
+      <div className="eye-panels">
+        <EyePanel eye="OD" label="Right Eye" />
+        <EyePanel eye="OS" label="Left Eye" />
       </div>
     </div>
   );

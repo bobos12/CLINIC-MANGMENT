@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { createVisit } from "./visits.api";
-import { VISIT_FORM_STEPS } from "./visits.constants";
+import { VISIT_FORM_STEPS, validateDuration, validateIOP } from "./visits.constants";
 import WizardForm from "../../components/ui/WizardForm/WizardForm";
 import PatientInfoStep from "./components/PatientInfoStep";
 import PatientHistoryStep from "./components/PatientHistoryStep";
@@ -32,29 +32,35 @@ const CreateVisit = () => {
     medicalHistory: {},
     surgicalHistory: {},
     recommendations: "",
+    followUp: { years: "", months: "", days: "" },
     followUpDate: "",
     eyeExam: {
       visualAcuity: { OD: "", OS: "" },
-      oldGlasses: { 
-        OD: { sphere: "", cylinder: "", axis: "" }, 
-        OS: { sphere: "", cylinder: "", axis: "" } 
+      oldGlasses: {
+        OD: { sphere: "", cylinder: "", axis: "" },
+        OS: { sphere: "", cylinder: "", axis: "" }
       },
-      refraction: { 
-        OD: { sphere: "", cylinder: "", axis: "" }, 
-        OS: { sphere: "", cylinder: "", axis: "" } 
+      refraction: {
+        OD: { sphere: "", cylinder: "", axis: "", ADD: "" },
+        OS: { sphere: "", cylinder: "", axis: "", ADD: "" }
       },
-      externalAppearance: { OD: "", OS: "" },
+      newPrescription: {
+        OD: { sphere: "", cylinder: "", axis: "" },
+        OS: { sphere: "", cylinder: "", axis: "" }
+      },
+      externalAppearance: { OD: { values: [], other: "" }, OS: { values: [], other: "" } },
       ocularMotility: { OD: { values: [], other: "" }, OS: { values: [], other: "" } },
       eyelid: { OD: { values: [], other: "" }, OS: { values: [], other: "" } },
       conjunctiva: { OD: { values: [], other: "" }, OS: { values: [], other: "" } },
       cornea: { OD: { values: [], other: "" }, OS: { values: [], other: "" } },
-      sclera: { OD: "", OS: "" },
+      sclera: { OD: { values: [], other: "" }, OS: { values: [], other: "" } },
       anteriorChamber: { OD: { values: [], other: "" }, OS: { values: [], other: "" } },
-      iris: { OD: "", OS: "" },
+      iris: { OD: { values: [], other: "" }, OS: { values: [], other: "" } },
       pupil: { OD: { values: [], other: "" }, OS: { values: [], other: "" } },
       lens: { OD: { values: [], other: "" }, OS: { values: [], other: "" } },
-      posteriorSegment: { OD: "", OS: "" },
+      posteriorSegment: { OD: { values: [], other: "" }, OS: { values: [], other: "" } },
       others: { OD: "", OS: "" },
+      iop: { OD: "", OS: "" },
     },
   });
 
@@ -81,16 +87,59 @@ const CreateVisit = () => {
   }, [formData.patientId, token]);
 
   const handleSubmit = async () => {
-    setSubmitting(true);
     setError("");
     setSuccess("");
 
     if (!formData.patientId) {
       setError("Please select a patient");
-      setSubmitting(false);
       return;
     }
 
+    // Frontend validation (align with backend limits)
+    for (const [key, item] of Object.entries(formData.complaint || {})) {
+      const err = validateDuration(item, `Complaint "${key}"`);
+      if (err) {
+        setError(err);
+        return;
+      }
+    }
+    for (const [key, item] of Object.entries(formData.medicalHistory || {})) {
+      const err = validateDuration(item, `Medical history "${key}"`);
+      if (err) {
+        setError(err);
+        return;
+      }
+    }
+    for (const [key, item] of Object.entries(formData.surgicalHistory || {})) {
+      const err = validateDuration(item, `Surgical history "${key}"`);
+      if (err) {
+        setError(err);
+        return;
+      }
+    }
+    const followUpErr = validateDuration(formData.followUp, "Follow-up");
+    if (followUpErr) {
+      setError(followUpErr);
+      return;
+    }
+    const iopOd = formData.eyeExam?.iop?.OD;
+    const iopOs = formData.eyeExam?.iop?.OS;
+    if (iopOd !== "" && iopOd != null) {
+      const err = validateIOP(iopOd);
+      if (err) {
+        setError(`OD (right eye) IOP: ${err}`);
+        return;
+      }
+    }
+    if (iopOs !== "" && iopOs != null) {
+      const err = validateIOP(iopOs);
+      if (err) {
+        setError(`OS (left eye) IOP: ${err}`);
+        return;
+      }
+    }
+
+    setSubmitting(true);
     try {
       await createVisit(token, formData);
       setSuccess("Visit created successfully!");

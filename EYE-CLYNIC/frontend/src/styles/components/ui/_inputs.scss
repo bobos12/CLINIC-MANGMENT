@@ -16,11 +16,11 @@
 
 .form-row {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   gap: $spacing-md;
-  
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
+
+  @media (min-width: $breakpoint-sm) {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -60,12 +60,14 @@ input[type="password"],
 .input-field {
   width: 100%;
   padding: $spacing-sm $spacing-md;
+  min-height: $input-min-height;
   border: $border-width-thin solid $grey-300;
   border-radius: $border-radius-md;
   background-color: $color-bg-primary;
-  font-size: $font-size-md;
+  font-size: 16px; // Prevents zoom on iOS when < 16px
   color: $color-text-primary;
   transition: all $transition-fast;
+  box-sizing: border-box;
   
   &::placeholder {
     color: $color-text-disabled;

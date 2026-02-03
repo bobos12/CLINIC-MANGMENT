@@ -99,7 +99,7 @@
   // Position will be set inline via JavaScript
   
   // Ensure dropdown doesn't go off-screen on small viewports
-  @media (max-width: 768px) {
+  @media (max-width: $breakpoint-sm) {
     max-width: calc(100vw - 32px);
     left: 16px !important;
     right: 16px !important;

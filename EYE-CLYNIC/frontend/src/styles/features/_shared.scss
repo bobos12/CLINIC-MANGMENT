@@ -6,12 +6,22 @@
 @import '../base/variables';
 
 // ============================================
-// COMMON FORM STYLES
+// COMMON FORM STYLES – responsive padding
 // ============================================
 .form-page {
   min-height: 100vh;
-  padding: $spacing-xl;
+  padding: $spacing-md;
   background-color: $color-bg-secondary;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+
+  @media (min-width: $breakpoint-sm) {
+    padding: $spacing-lg;
+  }
+  @media (min-width: $breakpoint-md) {
+    padding: $spacing-xl;
+  }
 }
 
 .form-container {
@@ -25,12 +35,13 @@
 .form-card {
   background-color: $color-bg-primary;
   border-radius: $border-radius-xl;
-  border: rgb(0, 0, 0) 1px solid;
+  border: $border-width-thin solid $grey-200;
   box-shadow: $shadow-xl;
   overflow: hidden;
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
+  min-width: 0;
 }
 
 .form-header1{
@@ -103,11 +114,11 @@
 
 .form-row {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   gap: $spacing-md;
-  
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
+
+  @media (min-width: $breakpoint-sm) {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -135,49 +146,63 @@
 
 .form-actions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
   gap: $spacing-md;
   margin-top: $spacing-xl;
   padding-top: $spacing-lg;
   border-top: $border-width-thin solid $grey-200;
-  
-  @media (max-width: 768px) {
+
+  @media (max-width: $breakpoint-sm) {
     flex-direction: column-reverse;
-    
+
     .btn {
       width: 100%;
+      min-height: $touch-target-min;
     }
   }
 }
 
 // ============================================
-// COMMON PAGE STYLES
+// COMMON PAGE STYLES – responsive
 // ============================================
 .table-page {
   min-height: 100vh;
-  padding: $spacing-xl;
+  padding: $spacing-md;
   background-color: $color-bg-secondary;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+
+  @media (min-width: $breakpoint-sm) {
+    padding: $spacing-lg;
+  }
+  @media (min-width: $breakpoint-md) {
+    padding: $spacing-xl;
+  }
 }
 
 .page-header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: $spacing-xl;
-  
-  @media (max-width: 768px) {
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+
+  @media (max-width: $breakpoint-xs) {
     flex-direction: column;
-    align-items: flex-start;
-    gap: $spacing-md;
+    align-items: stretch;
   }
 }
 
 .page-title {
-  font-size: $font-size-h1;
+  font-size: clamp($font-size-h2, 4vw, $font-size-h1);
   font-weight: $font-weight-bold;
   color: $color-text-primary;
   margin: 0;
+  word-wrap: break-word;
 }
 
 .page-alert {
@@ -201,19 +226,22 @@
 
 .search-bar {
   margin-bottom: $spacing-lg;
-  
+  width: 100%;
+  min-width: 0;
+
   .search-input {
     width: 100%;
-    padding: $spacing-md;
-    padding-left: $spacing-xl;
+    padding: $spacing-md $spacing-md $spacing-md $spacing-xl;
+    min-height: $input-min-height;
     border: $border-width-thin solid $grey-300;
     border-radius: $border-radius-md;
-    font-size: $font-size-md;
+    font-size: 16px; // Prevents zoom on iOS
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%239CA3AF' d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04 0.062 0.078 0.098 0.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-0.115-0.098zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: left $spacing-md center;
     background-size: 16px;
-    
+    box-sizing: border-box;
+
     &:focus {
       border-color: $color-primary;
       box-shadow: 0 0 0 3px rgba($color-primary, 0.1);

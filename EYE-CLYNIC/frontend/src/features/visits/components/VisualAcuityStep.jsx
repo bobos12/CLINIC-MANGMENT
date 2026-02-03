@@ -1,14 +1,11 @@
 // ============================================
 // VISUAL ACUITY STEP COMPONENT
-// Step 2: Visual Acuity Test
+// Step 2: Visual Acuity Test – OD and OS shown side by side
 // ============================================
 
-import { useState } from "react";
 import { VISUAL_ACUITY_OPTIONS } from "../visits.constants";
 
 const VisualAcuityStep = ({ formData, setFormData, currentStep }) => {
-  const [activeEye, setActiveEye] = useState("OD");
-
   const handleEyeExamChange = (field, eye, value) => {
     setFormData((prev) => ({
       ...prev,
@@ -22,66 +19,39 @@ const VisualAcuityStep = ({ formData, setFormData, currentStep }) => {
     }));
   };
 
-  return (
-    <div className={`step-content ${currentStep === 3 ? 'active' : ''}`}>
-      <h2 className="step-title">
-        👁️ Visual Acuity Test
-      </h2>
-
-      {/* Eye Toggle */}
-      <div className="eye-toggle-container">
-        <button
-          type="button"
-          className={`eye-toggle-btn ${activeEye === "OD" ? "active" : ""}`}
-          onClick={() => setActiveEye("OD")}
-        >
-          👁️ OD (Right Eye)
-        </button>
-        <button
-          type="button"
-          className={`eye-toggle-btn ${activeEye === "OS" ? "active" : ""}`}
-          onClick={() => setActiveEye("OS")}
-        >
-          👁️ OS (Left Eye)
-        </button>
+  const EyePanel = ({ eye, label }) => (
+    <div className={`eye-side eye-side-${eye.toLowerCase()}`}>
+      <h3 className="eye-side-header">👁️ {eye} ({label})</h3>
+      <label className="visual-acuity-label">
+        Select Visual Acuity
+      </label>
+      <div className="visual-acuity-grid">
+        {VISUAL_ACUITY_OPTIONS.map((option) => (
+          <button
+            key={option}
+            type="button"
+            className={`visual-acuity-option ${
+              formData.eyeExam.visualAcuity[eye] === option ? "selected" : ""
+            }`}
+            onClick={() => handleEyeExamChange("visualAcuity", eye, option)}
+          >
+            {option}
+          </button>
+        ))}
       </div>
+      <div className="acuity-value acuity-value-inline">
+        {formData.eyeExam.visualAcuity[eye] || "—"}
+      </div>
+    </div>
+  );
 
-      {/* Visual Acuity Selection */}
-      <div className="visual-acuity-container">
-        <label className="visual-acuity-label">
-          Select Visual Acuity for {activeEye === "OD" ? "Right" : "Left"} Eye
-        </label>
-        <div className="visual-acuity-grid">
-          {VISUAL_ACUITY_OPTIONS.map((option) => (
-            <button
-              key={option}
-              type="button"
-              className={`visual-acuity-option ${
-                formData.eyeExam.visualAcuity[activeEye] === option ? "selected" : ""
-              }`}
-              onClick={() => handleEyeExamChange("visualAcuity", activeEye, option)}
-            >
-              {option}
-            </button>
-          ))}
-        </div>
+  return (
+    <div className={`step-content ${currentStep === 3 ? "active" : ""}`}>
+      <h2 className="step-title">👁️ Visual Acuity Test</h2>
 
-        {/* Current Selection Display */}
-        <div className="visual-acuity-summary">
-          <div className="acuity-display">
-            <div className="acuity-label">OD (Right)</div>
-            <div className="acuity-value">
-              {formData.eyeExam.visualAcuity.OD || "—"}
-            </div>
-          </div>
-          <div className="acuity-separator">•</div>
-          <div className="acuity-display">
-            <div className="acuity-label">OS (Left)</div>
-            <div className="acuity-value">
-              {formData.eyeExam.visualAcuity.OS || "—"}
-            </div>
-          </div>
-        </div>
+      <div className="eye-panels">
+        <EyePanel eye="OD" label="Right Eye" />
+        <EyePanel eye="OS" label="Left Eye" />
       </div>
     </div>
   );

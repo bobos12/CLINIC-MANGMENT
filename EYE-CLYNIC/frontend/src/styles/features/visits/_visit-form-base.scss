@@ -7,7 +7,7 @@
 @import '../shared';
 
 // ============================================
-// FULL SCREEN LAYOUT
+// FULL SCREEN LAYOUT – responsive for mobile top bar
 // ============================================
 .visit-form-page {
   position: fixed;
@@ -20,9 +20,10 @@
   flex-direction: column;
   overflow: hidden;
   z-index: 100;
-  
-  @media (max-width: 768px) {
+
+  @media (max-width: $breakpoint-sm) {
     left: 0;
+    top: 56px; // Below mobile top bar
   }
 }
 
@@ -182,40 +183,105 @@
 }
 
 // ============================================
-// RESPONSIVE
+// EYE PANELS – two sides: OD (Right) | OS (Left)
+// Shared layout for steps that show both eyes side by side
 // ============================================
-@media (max-width: 1366px) {
+.eye-panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-xl;
+  width: 100%;
+  min-width: 0;
+
+  @media (max-width: $breakpoint-sm) {
+    grid-template-columns: 1fr;
+    gap: $spacing-lg;
+  }
+}
+
+.eye-side {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  min-width: 0;
+  padding: $spacing-lg;
+  border-radius: $border-radius-lg;
+  border: $border-width-medium solid $grey-200;
+  background-color: $color-bg-primary;
+}
+
+.eye-side-header {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  margin: 0 0 $spacing-sm 0;
+  padding-bottom: $spacing-sm;
+  border-bottom: 2px solid $color-primary;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.eye-side-od {
+  border-left: 4px solid $color-primary;
+}
+
+.eye-side-os {
+  border-left: 4px solid $color-secondary;
+}
+
+// ============================================
+// RESPONSIVE – use breakpoints; touch-friendly toggles
+// ============================================
+@media (max-width: $breakpoint-md) {
   .step-content {
     padding: $spacing-lg;
   }
-  
+
   .step-title {
-    font-size: $font-size-md;
+    font-size: $font-size-h3;
     margin-bottom: $spacing-md;
     padding-bottom: $spacing-sm;
   }
-  
+
   .form-group {
     margin-bottom: $spacing-lg;
   }
-  
+
   .visit-form-card .form-header {
     padding: $spacing-lg;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $breakpoint-sm) {
   .step-content {
     padding: $spacing-md;
+    -webkit-overflow-scrolling: touch;
   }
-  
+
+  .visit-form-card .form-header {
+    padding: $spacing-md $spacing-lg;
+  }
+
+  .visit-form-card .form-title {
+    font-size: $font-size-h3;
+  }
+
   .eye-toggle-container {
     width: 100%;
     flex-direction: column;
+    max-width: 100%;
   }
-  
+
   .eye-toggle-btn {
     width: 100%;
+    min-height: $touch-target-min;
     text-align: center;
+  }
+}
+
+@media (max-width: $breakpoint-xs) {
+  .step-content {
+    padding: $spacing-sm;
   }
 }

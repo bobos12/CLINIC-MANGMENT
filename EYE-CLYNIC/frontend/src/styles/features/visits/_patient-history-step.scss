@@ -4,174 +4,230 @@
 
 @import '../../base/variables';
 
-// ============================================
-// COMPLAINT BUTTONS
-// ============================================
-.complaint-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: $spacing-sm;
-  margin-top: $spacing-sm;
-  
-  @media (max-width: 1024px) {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  }
-  
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
+// ================= Groups Wrapper =================
+.step-content {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
 }
 
-.complaint-item-wrapper {
+// ================= Eye Selection =================
+.eye-selection {
+  padding: $spacing-sm $spacing-md;
+  background-color: $grey-50;
+  border: $border-width-medium solid $grey-200;
+  border-radius: $border-radius-md;
   display: flex;
   flex-direction: column;
   gap: $spacing-xs;
-}
 
-.complaint-btn {
-  padding: $spacing-md $spacing-lg;
-  background: $grey-50;
-  border: $border-width-medium solid $grey-200;
-  border-radius: $border-radius-md;
-  color: $color-text-primary;
-  font-weight: $font-weight-medium;
-  font-size: $font-size-md;
-  cursor: pointer;
-  transition: all $transition-fast;
-  text-align: left;
-  width: 100%;
-  
-  &:hover {
-    border-color: $color-primary;
-    background: rgba($color-primary, 0.05);
-  }
-  
-  &.selected {
-    background: $color-primary;
-    border-color: $color-primary;
-    color: $color-bg-primary;
+  .form-group-label {
     font-weight: $font-weight-bold;
+    font-size: $font-size-md;
+    color: $color-text-primary;
+  }
+
+  .eye-options {
+    display: flex;
+    gap: $spacing-sm;
+    margin-top: $spacing-xs;
+
+    .eye-option {
+      flex: 1;
+      cursor: pointer;
+      text-align: center;
+      padding: $spacing-sm $spacing-md;
+      border: $border-width-medium solid $grey-200;
+      border-radius: $border-radius-md;
+      font-weight: $font-weight-medium;
+      font-size: $font-size-md;
+      color: $color-text-primary;
+      transition: all $transition-fast;
+      position: relative;
+
+      &:hover {
+        border-color: $color-primary;
+        background: rgba($color-primary, 0.05);
+      }
+
+      input[type='radio'] {
+        display: none;
+      }
+
+      &.selected {
+        border-color: $color-primary;
+        background-color: $color-primary;
+        color: $color-bg-primary;
+        font-weight: $font-weight-bold;
+
+        &::after {
+          content: '✓';
+          position: absolute;
+          top: 5px;
+          right: 5px;
+          font-size: $font-size-sm;
+          color: $color-bg-primary;
+          font-weight: $font-weight-bold;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .eye-options {
+      flex-direction: column;
+
+      .eye-option {
+        width: 100%;
+      }
+    }
   }
 }
 
-.complaint-input-wrapper {
-  padding: 0 $spacing-xs;
-}
-
-.complaint-other-input {
-  width: 100%;
-  padding: $spacing-sm $spacing-md;
-  border: $border-width-thin solid $grey-300;
-  border-radius: $border-radius-md;
-  font-size: $font-size-md;
-  transition: all $transition-fast;
-  
-  &:focus {
-    border-color: $color-primary;
-    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
-    outline: none;
-  }
-}
-
-.history-other-input {
-  width: 100%;
-  padding: $spacing-xs $spacing-sm;
-  border: $border-width-thin solid $grey-300;
-  border-radius: $border-radius-sm;
-  font-size: $font-size-sm;
-  transition: all $transition-fast;
-  
-  &:focus {
-    border-color: $color-primary;
-    box-shadow: 0 0 0 2px rgba($color-primary, 0.1);
-    outline: none;
-  }
-}
-
-// ============================================
-// HISTORY GROUPS
-// ============================================
+// ================= Complaint / History Cards =================
+.complaint-grid,
 .history-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: $spacing-sm;
-  margin-top: $spacing-sm;
-  
+
   @media (max-width: 1024px) {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
-  
-  @media (max-width: 768px) {
+
+  @media (max-width: $breakpoint-sm) {
     grid-template-columns: 1fr;
   }
 }
 
+// ================= Complaint / History Items =================
+.complaint-item-wrapper,
 .history-item {
   display: flex;
-  align-items: center;
-  gap: $spacing-sm;
+  flex-direction: column;
+  gap: $spacing-xs;
   padding: $spacing-md;
   background-color: $grey-50;
   border: $border-width-medium solid $grey-200;
   border-radius: $border-radius-md;
   transition: all $transition-fast;
-  
+  position: relative;
+
   &:hover {
     border-color: $color-primary;
   }
-  
+
   &.selected {
-    background-color: rgba($color-primary, 0.05);
+    background-color: rgba($color-primary, 0.1);
     border-color: $color-primary;
+
+    &::after {
+      content: '✓';
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: $font-size-md;
+      color: $color-primary;
+      font-weight: $font-weight-bold;
+    }
+
+    .complaint-btn,
+    .history-label {
+      font-weight: $font-weight-bold;
+      color: $color-text-primary;
+    }
   }
-  
-  .history-checkbox {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    accent-color: $color-primary;
-    flex-shrink: 0;
-  }
-  
-  .history-label {
-    flex: 1;
-    cursor: pointer;
+
+  .history-label,
+  .complaint-btn {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
     font-weight: $font-weight-medium;
     font-size: $font-size-md;
     color: $color-text-primary;
     margin: 0;
+    cursor: pointer;
+    width: 100%;
   }
-}
 
-.years-input {
-  display: flex;
-  align-items: center;
-  gap: $spacing-xs;
-  
-  .years-label {
-    font-size: $font-size-xs;
-    color: $color-text-secondary;
-    font-weight: $font-weight-bold;
-    white-space: nowrap;
+  .history-checkbox {
+    width: 20px;
+    height: 20px;
+    accent-color: $color-primary;
+    flex-shrink: 0;
+    cursor: pointer;
   }
-  
-  .years-number-input {
-    width: 70px;
+
+  .history-other-input,
+  .complaint-other-input {
+    width: 100%;
     padding: $spacing-xs $spacing-sm;
     border: $border-width-thin solid $grey-300;
     border-radius: $border-radius-sm;
     font-size: $font-size-sm;
-    font-weight: $font-weight-medium;
-    text-align: center;
-    
-    &::placeholder {
-      color: $color-text-disabled;
-    }
-    
+    transition: all $transition-fast;
+
     &:focus {
       border-color: $color-primary;
       box-shadow: 0 0 0 2px rgba($color-primary, 0.1);
       outline: none;
+    }
+  }
+
+  // Duration container inside the box
+  .duration-inputs {
+    display: flex;
+    gap: $spacing-sm;
+    flex-wrap: wrap;
+    margin-top: $spacing-xs;
+
+    .duration-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .duration-label {
+        font-size: $font-size-xs;
+        font-weight: $font-weight-bold;
+        color: $color-text-secondary;
+        margin-bottom: 2px;
+      }
+
+      .duration-input {
+        width: 60px;
+        min-width: 50px;
+        padding: $spacing-xs $spacing-sm;
+        border: $border-width-thin solid $grey-300;
+        border-radius: $border-radius-sm;
+        font-size: $font-size-sm;
+        text-align: center;
+        cursor: text;
+
+        &::placeholder {
+          color: $color-text-disabled;
+        }
+
+        &:focus {
+          border-color: $color-primary;
+          box-shadow: 0 0 0 2px rgba($color-primary, 0.1);
+          outline: none;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .duration-inputs {
+    flex-direction: column;
+    gap: $spacing-xs;
+
+    .duration-item {
+      width: 100%;
+      .duration-input {
+        width: 100%;
+      }
     }
   }
 }
