@@ -24,7 +24,7 @@ const EyePanel = ({ eye, label, formData, setFormData, EYE_EXAM_FIELDS, renderOp
 
     <div className="exam-field-card">
       <label className="exam-field-title">
-        IOP (mmHg)
+        IOP 
       </label>
       <input
         type="number"

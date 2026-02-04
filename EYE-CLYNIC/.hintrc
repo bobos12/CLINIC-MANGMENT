@@ -7,7 +7,10 @@
       "default",
       {
         "ignore": [
-          "-ms-text-size-adjust"
+          "-ms-text-size-adjust",
+          "-webkit-overflow-scrolling",
+          "scrollbar-width",
+          "scrollbar-width: none"
         ]
       }
     ]

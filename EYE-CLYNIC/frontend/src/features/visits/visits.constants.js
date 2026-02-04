@@ -9,7 +9,9 @@ export const DURATION_LIMITS = {
   months: { min: 0, max: 12 },
   days: { min: 0, max: 31 },
 };
+
 export const IOP_LIMITS = { min: 0, max: 9000000000 }; // mmHg
+
 
 /** Validate a duration object (years, months, days). Returns first error message or null. */
 export function validateDuration(obj, label = "Duration") {
