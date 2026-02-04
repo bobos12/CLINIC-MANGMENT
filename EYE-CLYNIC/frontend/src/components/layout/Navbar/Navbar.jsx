@@ -1,37 +1,105 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Navbar = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { user, logout } = useAuth();
-  const [adminMenuOpen, setAdminMenuOpen] = useState(false);
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { user, logout } = useAuth();
 
-  // Don't show navbar on login page
-  if (!user || location.pathname === "/login") {
-    return null;
-  }
+    const [adminMenuOpen, setAdminMenuOpen] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
+    // ✅ ALWAYS run hooks first
+    useEffect(() => {
+      setMobileMenuOpen(false);
+    }, [location.pathname]);
 
-  const handleNavigation = (path) => {
-    navigate(path);
-    setAdminMenuOpen(false);
-  };
+    useEffect(() => {
+      const handleResize = () => {
+        if (window.matchMedia("(min-width: 769px)").matches) {
+          setMobileMenuOpen(false);
+        }
+      };
 
-  const isActive = (path) => {
-    if (path === "/dashboard") {
-      return location.pathname === "/dashboard";
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    // ✅ CONDITIONAL RETURN AFTER hooks
+    if (!user || location.pathname === "/login") {
+      return null;
     }
-    return location.pathname.includes(path);
-  };
 
+    const handleLogout = () => {
+      logout();
+      navigate("/login");
+    };
+
+    const handleNavigation = (path) => {
+      navigate(path);
+      setAdminMenuOpen(false);
+      setMobileMenuOpen(false);
+    };
+
+    const isActive = (path) => {
+      if (path === "/dashboard") {
+        return location.pathname === "/dashboard";
+      }
+      return location.pathname.includes(path);
+    };
+    
   return (
-    <aside className="sidebar">
+    <>
+      {/* Mobile top bar: hamburger + logo (visible only on small screens) */}
+      <header className="mobile-topbar" aria-label="Mobile navigation">
+        <button
+          type="button"
+          className="mobile-menu-btn"
+          onClick={() => setMobileMenuOpen(true)}
+          aria-label="Open menu"
+          aria-expanded={mobileMenuOpen}
+        >
+          <svg className="hamburger-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <div
+          className="mobile-topbar-logo"
+          onClick={() => handleNavigation("/dashboard")}
+          onKeyDown={(e) => e.key === "Enter" && handleNavigation("/dashboard")}
+          role="button"
+          tabIndex={0}
+          aria-label="Eye Clinic home"
+        >
+          <span className="mobile-logo-text">Eye Clinic</span>
+        </div>
+        <div className="mobile-topbar-user" aria-hidden="true">
+          <span className="mobile-user-avatar">{user.name.charAt(0).toUpperCase()}</span>
+        </div>
+      </header>
+
+      {/* Overlay: closes drawer when tapping outside (mobile). Focusable only when open to avoid aria-hidden/focus conflict. */}
+      <div
+        className={`sidebar-overlay ${mobileMenuOpen ? "sidebar-overlay--open" : ""}`}
+        onClick={() => setMobileMenuOpen(false)}
+        onKeyDown={(e) => e.key === "Escape" && setMobileMenuOpen(false)}
+        role="button"
+        tabIndex={mobileMenuOpen ? -1 : undefined}
+        aria-label="Close menu"
+      />
+
+      <aside className={`sidebar ${mobileMenuOpen ? "sidebar--open" : ""}`} aria-label="Main navigation">
+        <button
+          type="button"
+          className="sidebar-close-btn"
+          onClick={() => setMobileMenuOpen(false)}
+          aria-label="Close menu"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       {/* Logo */}
       <div 
         className="sidebar-logo"
@@ -142,6 +210,7 @@ const Navbar = () => {
         </button>
       </div>
     </aside>
+    </>
   );
 };
 

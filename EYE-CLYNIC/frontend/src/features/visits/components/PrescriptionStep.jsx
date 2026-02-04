@@ -1,17 +1,29 @@
 // ============================================
 // PRESCRIPTION STEP COMPONENT
-// Step 3: Prescription Details
+// Step 3: Prescription Details – OD and OS shown side by side
 // ============================================
 
-import { useState } from "react";
+import { useEffect } from "react";
 import {
   SPHERE_OPTIONS,
   CYLINDER_OPTIONS,
   AXIS_OPTIONS,
+  ADD_OPTIONS
 } from "../visits.constants";
 
 const PrescriptionStep = ({ formData, setFormData, currentStep }) => {
-  const [activeEye, setActiveEye] = useState("OD");
+  // Initialize newPrescription if undefined
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      eyeExam: {
+        ...prev.eyeExam,
+        oldGlasses: prev.eyeExam.oldGlasses || { OD: {}, OS: {} },
+        refraction: prev.eyeExam.refraction || { OD: {}, OS: {} },
+        newPrescription: prev.eyeExam.newPrescription || { OD: {}, OS: {} },
+      },
+    }));
+  }, []);
 
   const handlePrescriptionChange = (field, eye, subfield, value) => {
     setFormData((prev) => ({
@@ -29,214 +41,131 @@ const PrescriptionStep = ({ formData, setFormData, currentStep }) => {
     }));
   };
 
-  const copyToOtherEye = (field) => {
-    const sourceEye = activeEye;
-    const targetEye = activeEye === "OD" ? "OS" : "OD";
-    
+  const copyFromOtherEye = (field, targetEye) => {
+    const sourceEye = targetEye === "OD" ? "OS" : "OD";
     setFormData((prev) => ({
       ...prev,
       eyeExam: {
         ...prev.eyeExam,
         [field]: {
           ...prev.eyeExam[field],
-          [targetEye]: prev.eyeExam[field][sourceEye],
+          [targetEye]: { ...prev.eyeExam[field][sourceEye] },
         },
       },
     }));
   };
 
-  return (
-    <div className={`step-content ${currentStep === 4 ? 'active' : ''}`}>
-      <h2 className="step-title">
-        👓 Prescription Details
-      </h2>
-
-      {/* Eye Toggle */}
-      <div className="eye-toggle-container">
+  const renderPrescriptionFields = (fieldName, label, eye, options = { sphere: SPHERE_OPTIONS, cylinder: CYLINDER_OPTIONS, axis: AXIS_OPTIONS }) => (
+    <div className="prescription-section prescription" key={`${fieldName}-${eye}`}>
+      <div className="prescription-section-header">
+        <h4 className="prescription-section-title">{label}</h4>
         <button
           type="button"
-          className={`eye-toggle-btn ${activeEye === "OD" ? "active" : ""}`}
-          onClick={() => setActiveEye("OD")}
+          className="copy-eye-btn"
+          onClick={() => copyFromOtherEye(fieldName, eye)}
+          title={`Copy from ${eye === "OD" ? "Left" : "Right"} eye`}
         >
-          👁️ OD (Right Eye)
-        </button>
-        <button
-          type="button"
-          className={`eye-toggle-btn ${activeEye === "OS" ? "active" : ""}`}
-          onClick={() => setActiveEye("OS")}
-        >
-          👁️ OS (Left Eye)
+          Copy from {eye === "OD" ? "OS" : "OD"} →
         </button>
       </div>
-
-      {/* Old Glasses */}
-      <div className="prescription-section prescription-old">
-        <div className="prescription-section-header">
-          <h3 className="prescription-section-title">
-            📝 Old Glasses - {activeEye === "OD" ? "Right Eye" : "Left Eye"}
-          </h3>
-          <button
-            type="button"
-            className="copy-eye-btn"
-            onClick={() => copyToOtherEye("oldGlasses")}
-          >
-            Copy to {activeEye === "OD" ? "Left" : "Right"} →
-          </button>
-        </div>
-        <div className="prescription-fields">
-          <div className="prescription-field">
-            <label className="prescription-field-label">Sphere</label>
+      <div className="prescription-fields">
+        {Object.keys(options).map((subfield) => (
+          <div className="prescription-field" key={subfield}>
+            <label className="prescription-field-label">{subfield.charAt(0).toUpperCase() + subfield.slice(1)}</label>
             <select
-              value={formData.eyeExam.oldGlasses[activeEye]?.sphere || ""}
+              value={formData.eyeExam[fieldName]?.[eye]?.[subfield] || ""}
               onChange={(e) =>
-                handlePrescriptionChange("oldGlasses", activeEye, "sphere", e.target.value)
+                handlePrescriptionChange(fieldName, eye, subfield, e.target.value)
               }
               className="prescription-select"
             >
               <option value="">Select...</option>
-              {SPHERE_OPTIONS.map((opt) => (
+              {options[subfield].map((opt) => (
                 <option key={opt} value={opt}>
                   {opt}
                 </option>
               ))}
             </select>
           </div>
-          <div className="prescription-field">
-            <label className="prescription-field-label">Cylinder</label>
-            <select
-              value={formData.eyeExam.oldGlasses[activeEye]?.cylinder || ""}
-              onChange={(e) =>
-                handlePrescriptionChange("oldGlasses", activeEye, "cylinder", e.target.value)
-              }
-              className="prescription-select"
-            >
-              <option value="">Select...</option>
-              {CYLINDER_OPTIONS.map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="prescription-field">
-            <label className="prescription-field-label">Axis</label>
-            <select
-              value={formData.eyeExam.oldGlasses[activeEye]?.axis || ""}
-              onChange={(e) =>
-                handlePrescriptionChange("oldGlasses", activeEye, "axis", e.target.value)
-              }
-              className="prescription-select"
-            >
-              <option value="">Select...</option>
-              {AXIS_OPTIONS.map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
+        ))}
       </div>
+    </div>
+  );
 
-      {/* New Refraction */}
+  const EyePanel = ({ eye, label }) => (
+    <div className={`eye-side eye-side-${eye.toLowerCase()}`}>
+      <h3 className="eye-side-header">👁️ {eye} — {label}</h3>
+  
+      {renderPrescriptionFields("oldGlasses", "📝 Old Glasses", eye)}
+      {renderPrescriptionFields("refraction", "✨ Refraction", eye)}
+      {renderPrescriptionFields("newPrescription", "🆕 New Prescription", eye)}
+  
+      {/* ADD */}
       <div className="prescription-section prescription-new">
         <div className="prescription-section-header">
-          <h3 className="prescription-section-title">
-            ✨ New Refraction - {activeEye === "OD" ? "Right Eye" : "Left Eye"}
-          </h3>
+          <h4 className="prescription-section-title">Reading Addition (ADD)</h4>
           <button
             type="button"
             className="copy-eye-btn"
-            onClick={() => copyToOtherEye("refraction")}
+            onClick={() => copyFromOtherEye("refraction", eye)}
           >
-            Copy to {activeEye === "OD" ? "Left" : "Right"} →
+            Copy ADD from {eye === "OD" ? "OS" : "OD"}
           </button>
         </div>
-        <div className="prescription-fields">
+  
+        <div className="prescription-fields add-only">
           <div className="prescription-field">
-            <label className="prescription-field-label">Sphere</label>
+            <label className="prescription-field-label">Addition</label>
             <select
-              value={formData.eyeExam.refraction[activeEye]?.sphere || ""}
+              value={formData.eyeExam.refraction?.[eye]?.ADD || ""}
               onChange={(e) =>
-                handlePrescriptionChange("refraction", activeEye, "sphere", e.target.value)
+                handlePrescriptionChange("refraction", eye, "ADD", e.target.value)
               }
               className="prescription-select"
             >
-              <option value="">Select...</option>
-              {SPHERE_OPTIONS.map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="prescription-field">
-            <label className="prescription-field-label">Cylinder</label>
-            <select
-              value={formData.eyeExam.refraction[activeEye]?.cylinder || ""}
-              onChange={(e) =>
-                handlePrescriptionChange("refraction", activeEye, "cylinder", e.target.value)
-              }
-              className="prescription-select"
-            >
-              <option value="">Select...</option>
-              {CYLINDER_OPTIONS.map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="prescription-field">
-            <label className="prescription-field-label">Axis</label>
-            <select
-              value={formData.eyeExam.refraction[activeEye]?.axis || ""}
-              onChange={(e) =>
-                handlePrescriptionChange("refraction", activeEye, "axis", e.target.value)
-              }
-              className="prescription-select"
-            >
-              <option value="">Select...</option>
-              {AXIS_OPTIONS.map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
-                </option>
+              <option value="">Select…</option>
+              {ADD_OPTIONS.map((opt) => (
+                <option key={opt} value={opt}>{opt}</option>
               ))}
             </select>
           </div>
         </div>
       </div>
+    </div>
+  );
+  
 
-      {/* Summary View */}
+  return (
+    <div className={`step-content ${currentStep === 4 ? "active" : ""}`}>
+      <h2 className="step-title">👓 Prescription Details</h2>
+
+      <div className="eye-panels">
+        <EyePanel eye="OD" label="Right Eye" />
+        <EyePanel eye="OS" label="Left Eye" />
+      </div>
+
+      {/* Prescription Summary – both eyes */}
       <div className="prescription-summary">
         <h4 className="prescription-summary-title">📊 Prescription Summary</h4>
         <div className="prescription-summary-grid">
-          <div className="prescription-summary-eye">
-            <div className="prescription-summary-label">OD (Right Eye)</div>
-            <div className="prescription-summary-old">
-              Old: {formData.eyeExam.oldGlasses.OD?.sphere || "—"} /{" "}
-              {formData.eyeExam.oldGlasses.OD?.cylinder || "—"} ×{" "}
-              {formData.eyeExam.oldGlasses.OD?.axis || "—"}
+          {["OD", "OS"].map((eye) => (
+            <div className="prescription-summary-eye" key={eye}>
+              <div className="prescription-summary-label">{eye} ({eye === "OD" ? "Right" : "Left"} Eye)</div>
+              {["oldGlasses", "refraction", "newPrescription"].map((field) => (
+                <div className="prescription-summary-field" key={field}>
+                  {field.replace(/([A-Z])/g, " $1").trim()}:{" "}
+                  {formData.eyeExam[field]?.[eye]?.sphere || "—"} /{" "}
+                  {formData.eyeExam[field]?.[eye]?.cylinder || "—"} ×{" "}
+                  {formData.eyeExam[field]?.[eye]?.axis || "—"}
+                </div>
+              ))}
+              {formData.eyeExam.refraction?.[eye]?.ADD && (
+                <div className="prescription-summary-field">
+                  Addition: {formData.eyeExam.refraction[eye]?.ADD}
+                </div>
+              )}
             </div>
-            <div className="prescription-summary-new">
-              New: {formData.eyeExam.refraction.OD?.sphere || "—"} /{" "}
-              {formData.eyeExam.refraction.OD?.cylinder || "—"} ×{" "}
-              {formData.eyeExam.refraction.OD?.axis || "—"}
-            </div>
-          </div>
-          <div className="prescription-summary-eye">
-            <div className="prescription-summary-label">OS (Left Eye)</div>
-            <div className="prescription-summary-old">
-              Old: {formData.eyeExam.oldGlasses.OS?.sphere || "—"} /{" "}
-              {formData.eyeExam.oldGlasses.OS?.cylinder || "—"} ×{" "}
-              {formData.eyeExam.oldGlasses.OS?.axis || "—"}
-            </div>
-            <div className="prescription-summary-new">
-              New: {formData.eyeExam.refraction.OS?.sphere || "—"} /{" "}
-              {formData.eyeExam.refraction.OS?.cylinder || "—"} ×{" "}
-              {formData.eyeExam.refraction.OS?.axis || "—"}
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>

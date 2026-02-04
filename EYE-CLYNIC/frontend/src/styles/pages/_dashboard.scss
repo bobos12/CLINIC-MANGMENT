@@ -1,13 +1,24 @@
 // ============================================
 // DASHBOARD PAGE STYLES
+// Mobile-first responsive layout
 // ============================================
 
 @import '../base/variables';
 
 .dashboard {
   min-height: 100vh;
-  padding: $spacing-xl;
+  padding: $spacing-md;
   background-color: $color-bg-secondary;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+
+  @media (min-width: $breakpoint-sm) {
+    padding: $spacing-lg;
+  }
+  @media (min-width: $breakpoint-md) {
+    padding: $spacing-xl;
+  }
 }
 
 // ============================================
@@ -19,14 +30,15 @@
 
 .header-content {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+  gap: $spacing-md;
   margin-bottom: $spacing-lg;
-  
-  @media (max-width: 768px) {
+
+  @media (max-width: $breakpoint-xs) {
     flex-direction: column;
-    align-items: flex-start;
-    gap: $spacing-md;
+    align-items: stretch;
   }
 }
 
@@ -35,10 +47,11 @@
 }
 
 .dashboard-title {
-  font-size: $font-size-h1;
+  font-size: clamp($font-size-h2, 5vw, $font-size-h1);
   font-weight: $font-weight-bold;
   color: $color-text-primary;
   margin-bottom: $spacing-xs;
+  word-wrap: break-word;
 }
 
 .dashboard-subtitle {
@@ -57,15 +70,17 @@
 // ============================================
 .quick-actions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: $spacing-md;
-  
-  @media (max-width: 768px) {
+
+  @media (max-width: $breakpoint-sm) {
     width: 100%;
     flex-direction: column;
-    
+
     .action-btn {
       width: 100%;
+      min-height: $touch-target-min;
     }
   }
 }
@@ -73,8 +88,10 @@
 .action-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: $spacing-sm;
   padding: $spacing-md $spacing-lg;
+  min-height: $touch-target-min;
   border-radius: $border-radius-md;
   font-size: $font-size-md;
   font-weight: $font-weight-medium;
@@ -133,30 +150,60 @@
 }
 
 // ============================================
-// STATS GRID
+// STATS GRID – single column on small screens
 // ============================================
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: $spacing-lg;
+  grid-template-columns: 1fr;
+  gap: $spacing-md;
   margin-bottom: $spacing-xl;
-  
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
+
+  @media (min-width: $breakpoint-xs) {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: $spacing-lg;
+  }
+  @media (min-width: $breakpoint-md) {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   }
 }
 
 // ============================================
-// TABLES GRID
+// TABLES GRID – stacked on small/medium screens
 // ============================================
 .tables-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-columns: 1fr;
   gap: $spacing-lg;
-  
-  @media (max-width: 1024px) {
-    grid-template-columns: 1fr;
+  margin-bottom: $spacing-xl;
+  min-width: 0;
+
+  @media (min-width: $breakpoint-md) {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
   }
+}
+
+// ============================================
+// TABLE CARD – responsive header
+// ============================================
+// Dashboard table cards – prevent overflow on small screens
+.dashboard .table-card {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.dashboard .card-header {
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+
+  @media (max-width: $breakpoint-xs) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.dashboard .table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 // ============================================
@@ -167,8 +214,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 400px;
+  min-height: min(400px, 60vh);
   gap: $spacing-md;
+  padding: $spacing-lg;
 }
 
 .spinner {

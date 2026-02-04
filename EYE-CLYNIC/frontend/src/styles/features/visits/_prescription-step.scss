@@ -1,94 +1,127 @@
 // ============================================
-// PRESCRIPTION STEP STYLES
+// PRESCRIPTION STEP STYLES (FIXED)
 // ============================================
 
 @import '../../base/variables';
 
 // ============================================
-// PRESCRIPTION
+// STEP LAYOUT
+// ============================================
+.eye-panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-lg;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.eye-side {
+  background: $color-bg-primary;
+  border-radius: $border-radius-lg;
+  padding: $spacing-lg;
+  border: $border-width-thin solid $grey-200;
+}
+
+.eye-side-header {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  margin-bottom: $spacing-lg;
+  color: $color-text-primary;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+// ============================================
+// PRESCRIPTION SECTIONS
 // ============================================
 .prescription-section {
   padding: $spacing-lg;
   border-radius: $border-radius-lg;
   margin-bottom: $spacing-lg;
-  
-  &.prescription-old {
-    background: rgba($color-warning, 0.1);
-    border: $border-width-medium solid rgba($color-warning, 0.3);
-  }
-  
-  &.prescription-new {
-    background: rgba($color-info, 0.1);
-    border: $border-width-medium solid rgba($color-info, 0.3);
-  }
+  border: $border-width-medium solid transparent;
+  background: $grey-50;
 }
 
+/* Old Glasses */
+.prescription-section:nth-of-type(1) {
+  background: rgba($color-warning, 0.08);
+  border-color: rgba($color-warning, 0.35);
+}
+
+/* Refraction */
+.prescription-section:nth-of-type(2) {
+  background: rgba($color-primary, 0.06);
+  border-color: rgba($color-primary, 0.35);
+}
+
+/* New Prescription */
+.prescription-section:nth-of-type(3),
+.prescription-new {
+  background: rgba($color-info, 0.08);
+  border-color: rgba($color-info, 0.35);
+}
+
+// ============================================
+// SECTION HEADER
+// ============================================
 .prescription-section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: $spacing-lg;
-  flex-wrap: wrap;
   gap: $spacing-sm;
-  
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+  margin-bottom: $spacing-md;
+  flex-wrap: wrap;
 }
 
 .prescription-section-title {
-  font-size: $font-size-lg;
+  font-size: $font-size-md;
   font-weight: $font-weight-bold;
   margin: 0;
-  
-  .prescription-old & {
-    color: darken($color-warning, 20%);
-  }
-  
-  .prescription-new & {
-    color: darken($color-info, 20%);
-  }
+  color: $color-text-primary;
 }
 
+// ============================================
+// COPY BUTTON
+// ============================================
 .copy-eye-btn {
-  padding: $spacing-sm $spacing-md;
-  border: none;
+  padding: $spacing-xs $spacing-md;
   border-radius: $border-radius-md;
-  color: $color-bg-primary;
+  font-size: $font-size-xs;
   font-weight: $font-weight-bold;
-  font-size: $font-size-sm;
+  border: none;
   cursor: pointer;
-  transition: all $transition-fast;
-  
-  .prescription-old & {
-    background: $color-warning;
-    
-    &:hover {
-      background: darken($color-warning, 5%);
-      box-shadow: $shadow-sm;
-    }
-  }
-  
-  .prescription-new & {
-    background: $color-info;
-    
-    &:hover {
-      background: darken($color-info, 5%);
-      box-shadow: $shadow-sm;
-    }
-  }
-  
-  @media (max-width: 768px) {
-    width: 100%;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  background: $grey-300;
+  color: $color-text-primary;
+
+  &:hover {
+    background: darken($grey-300, 5%);
+    transform: translateY(-1px);
   }
 }
 
+/* Direction hint */
+.eye-side-od .copy-eye-btn::after {
+  content: ' ←';
+}
+
+.eye-side-os .copy-eye-btn::after {
+  content: ' →';
+}
+
+// ============================================
+// FIELDS GRID
+// ============================================
 .prescription-fields {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: $spacing-md;
-  
+
   @media (max-width: 1024px) {
     grid-template-columns: 1fr;
   }
@@ -104,40 +137,31 @@
   font-size: $font-size-xs;
   font-weight: $font-weight-bold;
   text-transform: uppercase;
-  
-  .prescription-old & {
-    color: darken($color-warning, 20%);
-  }
-  
-  .prescription-new & {
-    color: darken($color-info, 20%);
-  }
+  color: $color-text-secondary;
 }
 
+// ============================================
+// SELECT INPUT
+// ============================================
 .prescription-select {
-  width: 100%;
-  padding: $spacing-md;
-  font-size: $font-size-md;
-  font-weight: $font-weight-medium;
+  padding: $spacing-sm $spacing-md;
   border-radius: $border-radius-md;
+  font-size: $font-size-sm;
+  border: $border-width-thin solid $grey-300;
   background: $color-bg-primary;
-  
-  .prescription-old & {
-    border: $border-width-medium solid rgba($color-warning, 0.5);
-  }
-  
-  .prescription-new & {
-    border: $border-width-medium solid rgba($color-info, 0.5);
-  }
-  
+
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.12);
   }
 }
 
+// ============================================
+// PRESCRIPTION SUMMARY
+// ============================================
 .prescription-summary {
-  margin-top: $spacing-lg;
+  margin-top: $spacing-xl;
   padding: $spacing-lg;
   background: $grey-50;
   border-radius: $border-radius-lg;
@@ -145,37 +169,35 @@
 }
 
 .prescription-summary-title {
-  margin: 0 0 $spacing-md 0;
   font-size: $font-size-lg;
   font-weight: $font-weight-bold;
-  color: $color-text-primary;
+  margin-bottom: $spacing-md;
 }
 
 .prescription-summary-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: $spacing-md;
-  
+
   @media (max-width: 1024px) {
     grid-template-columns: 1fr;
   }
 }
 
 .prescription-summary-eye {
-  .prescription-summary-label {
-    font-weight: $font-weight-bold;
-    margin-bottom: $spacing-xs;
-    color: $color-text-primary;
-  }
-  
-  .prescription-summary-old {
-    font-size: $font-size-sm;
-    color: $color-text-secondary;
-  }
-  
-  .prescription-summary-new {
-    font-size: $font-size-sm;
-    color: $color-text-primary;
-    font-weight: $font-weight-bold;
-  }
+  background: $color-bg-primary;
+  padding: $spacing-md;
+  border-radius: $border-radius-md;
+  border: $border-width-thin solid $grey-200;
+}
+
+.prescription-summary-label {
+  font-weight: $font-weight-bold;
+  margin-bottom: $spacing-sm;
+}
+
+.prescription-summary-field {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: 4px;
 }

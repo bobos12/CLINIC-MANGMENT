@@ -129,16 +129,16 @@
 // ============================================
 // RESPONSIVE
 // ============================================
-@media (max-width: 768px) {
+@media (max-width: $breakpoint-sm) {
   .header {
     left: 0;
     padding: 0 $spacing-md;
   }
-  
+
   .department-selector {
     min-width: 150px;
   }
-  
+
   .user-name-header {
     display: none;
   }

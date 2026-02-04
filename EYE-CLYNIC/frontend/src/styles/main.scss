@@ -20,24 +20,42 @@
 @import './features/index';
 
 // ============================================
-// GLOBAL UTILITIES
+// GLOBAL UTILITIES & LAYOUT
 // ============================================
 
-// App Container
+// App Container – flex layout; sidebar (or mobile topbar) + main
 .app-container {
   display: flex;
   min-height: 100vh;
   background-color: $color-bg-secondary;
+  overflow-x: hidden;
 }
 
+// Main content: offset by sidebar on desktop; full width + top padding on mobile
 .app-main {
   flex: 1;
-  margin-left: $sidebar-width;
+  min-width: 0; // Prevents flex item from overflowing
   min-height: 100vh;
-  padding-top: $header-height;
-  
-  @media (max-width: 768px) {
-    margin-left: 0;
+  margin-left: 0;
+  padding-top: 0;
+  padding-left: $spacing-md;
+  padding-right: $spacing-md;
+  padding-bottom: $spacing-xl;
+
+  @media (min-width: $breakpoint-sm) {
+    margin-left: $sidebar-width;
+    padding-left: $spacing-lg;
+    padding-right: $spacing-lg;
+    padding-top: $header-height;
+  }
+
+  @media (max-width: $breakpoint-sm) {
+    padding-top: 56px; // Space for fixed mobile top bar
+  }
+
+  @media (min-width: $breakpoint-xl) {
+    padding-left: $spacing-xl;
+    padding-right: $spacing-xl;
   }
 }
 

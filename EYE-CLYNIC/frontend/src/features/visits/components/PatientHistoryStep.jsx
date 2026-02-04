@@ -1,272 +1,186 @@
 // ============================================
 // PATIENT HISTORY STEP COMPONENT
-// Step 2: Patient History (Complaints, Medical, Surgical)
+// Step 2: Patient History
 // ============================================
 
 import {
   COMPLAINT_OPTIONS,
   MEDICAL_HISTORY_OPTIONS,
   SURGICAL_HISTORY_OPTIONS,
+  DURATION_LIMITS,
 } from "../visits.constants";
 
+const defaultHistoryObject = {
+  years: "",
+  months: "",
+  days: "",
+  value: "",
+  eye: "Both", // now per item
+};
+
 const PatientHistoryStep = ({ formData, setFormData, currentStep }) => {
-  const handleComplaintChange = (complaint) => {
+
+  // Toggle selection of an item
+  const toggleItem = (section, key) => {
     setFormData((prev) => {
-      const newComplaints = { ...prev.complaint };
-      if (newComplaints[complaint] !== undefined) {
-        delete newComplaints[complaint];
+      const updated = { ...prev[section] };
+      if (updated[key]) {
+        delete updated[key]; // deselect
       } else {
-        // Don't set default value, let it be empty
-        newComplaints[complaint] = complaint === "Others" ? "" : "";
+        updated[key] = { ...defaultHistoryObject };
       }
       return {
         ...prev,
-        complaint: newComplaints,
+        [section]: updated,
       };
     });
   };
 
-  const handleComplaintValueChange = (complaint, value) => {
+  // Clamp numeric value to backend limits
+  const clampDuration = (field, value) => {
+    const num = value === "" ? "" : Number(value);
+    if (num === "") return "";
+    const limits = DURATION_LIMITS[field];
+    if (!limits) return num;
+    let clamped = Math.max(Number(limits.min) ?? 0, num);
+    if (limits.max != null) clamped = Math.min(limits.max, clamped);
+    return clamped;
+  };
+
+  // Update years/months/days/eye (with validation)
+  const handleDurationChange = (section, key, field, value) => {
+    const isNumberField = ["years", "months", "days"].includes(field);
+    const finalValue = isNumberField ? clampDuration(field, value) : value;
     setFormData((prev) => ({
       ...prev,
-      complaint: {
-        ...prev.complaint,
-        [complaint]: value,
+      [section]: {
+        ...prev[section],
+        [key]: {
+          ...(prev[section][key] || {}),
+          [field]: finalValue,
+        },
       },
     }));
   };
 
-  const handleComplaintYearsChange = (complaint, years) => {
+  // Update "Others" text
+  const handleTextChange = (section, key, value) => {
     setFormData((prev) => ({
       ...prev,
-      complaint: {
-        ...prev.complaint,
-        [complaint]: years === "" ? "" : parseInt(years) || "",
+      [section]: {
+        ...prev[section],
+        [key]: {
+          ...prev[section][key],
+          value,
+        },
       },
     }));
   };
 
-  const handleMedicalHistoryChange = (condition) => {
-    setFormData((prev) => {
-      const newHistory = { ...prev.medicalHistory };
-      if (newHistory[condition] !== undefined) {
-        delete newHistory[condition];
-      } else {
-        // Don't set default value, let it be empty
-        newHistory[condition] = condition === "Others" ? "" : "";
-      }
-      return {
-        ...prev,
-        medicalHistory: newHistory,
-      };
-    });
-  };
+  // Render Years/Months/Days + Eye select per item (with backend-aligned limits)
+  const renderDurationInputs = (section, key) => (
+    <div className="duration-inputs">
+      {["years", "months", "days"].map((field) => {
+        const limits = DURATION_LIMITS[field];
+        return (
+          <div key={field} className="duration-item">
+            <label className="duration-label">
+              {field.charAt(0).toUpperCase() + field.slice(1)}
+            </label>
+            <input
+              type="number"
+              min={limits?.min ?? 0}
+              max={limits?.max ?? undefined}
+              placeholder="0"
+              value={formData[section]?.[key]?.[field] ?? ""}
+              onChange={(e) =>
+                handleDurationChange(section, key, field, e.target.value)
+              }
+              className="duration-input"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+        );
+      })}
 
-  const handleMedicalHistoryYearsChange = (condition, years) => {
-    setFormData((prev) => ({
-      ...prev,
-      medicalHistory: {
-        ...prev.medicalHistory,
-        [condition]: years === "" ? "" : parseInt(years) || "",
-      },
-    }));
-  };
+      {/* Eye selector per item */}
+      <div className="duration-item">
+        <label className="duration-label">Eye</label>
+        <select
+          value={formData[section]?.[key]?.eye || "Both"}
+          onChange={(e) =>
+            handleDurationChange(section, key, "eye", e.target.value)
+          }
+          className="duration-input"
+        >
+          {["Right", "Left", "Both"].map((opt) => (
+            <option key={opt} value={opt}>{opt}</option>
+          ))}
+        </select>
+      </div>
+    </div>
+  );
 
-  const handleMedicalHistoryOtherChange = (condition, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      medicalHistory: {
-        ...prev.medicalHistory,
-        [condition]: value,
-      },
-    }));
-  };
+  // Render individual complaint/condition/procedure item
+  const renderItem = (section, item) => {
+    const isSelected = !!formData[section]?.[item];
+    const isOthers = item === "Others";
 
-  const handleSurgicalHistoryChange = (procedure) => {
-    setFormData((prev) => {
-      const newHistory = { ...prev.surgicalHistory };
-      if (newHistory[procedure] !== undefined) {
-        delete newHistory[procedure];
-      } else {
-        // Don't set default value, let it be empty
-        newHistory[procedure] = procedure === "Others" ? "" : "";
-      }
-      return {
-        ...prev,
-        surgicalHistory: newHistory,
-      };
-    });
-  };
+    return (
+      <div
+        key={item}
+        className={`complaint-item-wrapper history-item ${isSelected ? "selected" : ""}`}
+        onClick={() => toggleItem(section, item)}
+      >
+        <div className="complaint-btn">
+          {isSelected && <span className="checkmark">✓</span>}
+          {item}
+        </div>
 
-  const handleSurgicalHistoryYearsChange = (procedure, years) => {
-    setFormData((prev) => ({
-      ...prev,
-      surgicalHistory: {
-        ...prev.surgicalHistory,
-        [procedure]: years === "" ? "" : parseInt(years) || "",
-      },
-    }));
-  };
+        {isSelected && (
+          <div className="complaint-input-wrapper" onClick={(e) => e.stopPropagation()}>
+            {isOthers && (
+              <input
+                type="text"
+                placeholder={`Specify ${section === "complaint" ? "complaint" : section === "medicalHistory" ? "condition" : "procedure"}...`}
+                value={formData[section][item]?.value || ""}
+                onChange={(e) => handleTextChange(section, item, e.target.value)}
+                className="complaint-other-input history-other-input"
+              />
+            )}
 
-  const handleSurgicalHistoryOtherChange = (procedure, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      surgicalHistory: {
-        ...prev.surgicalHistory,
-        [procedure]: value,
-      },
-    }));
+            {renderDurationInputs(section, item)}
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
-    <div className={`step-content ${currentStep === 2 ? 'active' : ''}`}>
+    <div className={`step-content ${currentStep === 2 ? "active" : ""}`}>
       <h2 className="step-title">📋 Patient History</h2>
-      
-      {/* Chief Complaint */}
+
+      {/* ================= Chief Complaint ================= */}
       <div className="form-group">
-        <label className="form-group-label">Chief Complaints</label>
+        <label className="form-group-label">Chief Complaint</label>
         <div className="complaint-grid">
-          {COMPLAINT_OPTIONS.map((complaint) => (
-            <div key={complaint} className="complaint-item-wrapper">
-              <button
-                type="button"
-                className={`complaint-btn ${
-                  formData.complaint[complaint] !== undefined ? "selected" : ""
-                }`}
-                onClick={() => handleComplaintChange(complaint)}
-              >
-                {formData.complaint[complaint] !== undefined ? "✓ " : ""}
-                {complaint}
-              </button>
-              {formData.complaint[complaint] !== undefined && (
-                <div className="complaint-input-wrapper">
-                  {complaint === "Others" ? (
-                    <input
-                      type="text"
-                      placeholder="Specify complaint..."
-                      value={formData.complaint[complaint] || ""}
-                      onChange={(e) => handleComplaintValueChange(complaint, e.target.value)}
-                      className="complaint-other-input"
-                    />
-                  ) : (
-                    <div className="years-input">
-                      <span className="years-label">Years:</span>
-                      <input
-                        type="number"
-                        min="0"
-                        placeholder="0"
-                        value={formData.complaint[complaint] === "" ? "" : formData.complaint[complaint] || ""}
-                        onChange={(e) => handleComplaintYearsChange(complaint, e.target.value)}
-                        className="years-number-input"
-                      />
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          ))}
+          {COMPLAINT_OPTIONS.map((complaint) => renderItem("complaint", complaint))}
         </div>
       </div>
 
-      {/* Medical History */}
+      {/* ================= Medical History ================= */}
       <div className="form-group">
         <label className="form-group-label">Medical History</label>
         <div className="history-grid">
-          {MEDICAL_HISTORY_OPTIONS.map((condition) => (
-            <div
-              key={condition}
-              className={`history-item ${
-                formData.medicalHistory[condition] !== undefined ? "selected" : ""
-              }`}
-            >
-              <input
-                type="checkbox"
-                id={`medical-${condition}`}
-                checked={formData.medicalHistory[condition] !== undefined}
-                onChange={() => handleMedicalHistoryChange(condition)}
-                className="history-checkbox"
-              />
-              <label htmlFor={`medical-${condition}`} className="history-label">
-                {condition}
-              </label>
-              {formData.medicalHistory[condition] !== undefined && (
-                condition === "Others" ? (
-                  <input
-                    type="text"
-                    placeholder="Specify condition..."
-                    value={formData.medicalHistory[condition] || ""}
-                    onChange={(e) => handleMedicalHistoryOtherChange(condition, e.target.value)}
-                    className="history-other-input"
-                  />
-                ) : (
-                  <div className="years-input">
-                    <span className="years-label">Years:</span>
-                    <input
-                      type="number"
-                      min="0"
-                      placeholder="0"
-                      value={formData.medicalHistory[condition] === "" ? "" : formData.medicalHistory[condition] || ""}
-                      onChange={(e) =>
-                        handleMedicalHistoryYearsChange(condition, e.target.value)
-                      }
-                      className="years-number-input"
-                    />
-                  </div>
-                )
-              )}
-            </div>
-          ))}
+          {MEDICAL_HISTORY_OPTIONS.map((condition) => renderItem("medicalHistory", condition))}
         </div>
       </div>
 
-      {/* Surgical History */}
+      {/* ================= Surgical History ================= */}
       <div className="form-group">
         <label className="form-group-label">Surgical History</label>
         <div className="history-grid">
-          {SURGICAL_HISTORY_OPTIONS.map((procedure) => (
-            <div
-              key={procedure}
-              className={`history-item ${
-                formData.surgicalHistory[procedure] !== undefined ? "selected" : ""
-              }`}
-            >
-              <input
-                type="checkbox"
-                id={`surgical-${procedure}`}
-                checked={formData.surgicalHistory[procedure] !== undefined}
-                onChange={() => handleSurgicalHistoryChange(procedure)}
-                className="history-checkbox"
-              />
-              <label htmlFor={`surgical-${procedure}`} className="history-label">
-                {procedure}
-              </label>
-              {formData.surgicalHistory[procedure] !== undefined && (
-                procedure === "Others" ? (
-                  <input
-                    type="text"
-                    placeholder="Specify procedure..."
-                    value={formData.surgicalHistory[procedure] || ""}
-                    onChange={(e) => handleSurgicalHistoryOtherChange(procedure, e.target.value)}
-                    className="history-other-input"
-                  />
-                ) : (
-                  <div className="years-input">
-                    <span className="years-label">Years:</span>
-                    <input
-                      type="number"
-                      min="0"
-                      placeholder="0"
-                      value={formData.surgicalHistory[procedure] === "" ? "" : formData.surgicalHistory[procedure] || ""}
-                      onChange={(e) =>
-                        handleSurgicalHistoryYearsChange(procedure, e.target.value)
-                      }
-                      className="years-number-input"
-                    />
-                  </div>
-                )
-              )}
-            </div>
-          ))}
+          {SURGICAL_HISTORY_OPTIONS.map((procedure) => renderItem("surgicalHistory", procedure))}
         </div>
       </div>
     </div>

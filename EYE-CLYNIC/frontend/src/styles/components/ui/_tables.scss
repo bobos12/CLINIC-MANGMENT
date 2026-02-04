@@ -1,18 +1,23 @@
 // ============================================
 // TABLE COMPONENT STYLES
+// Responsive: horizontal scroll on small screens; touch-friendly
 // ============================================
 
 @import '../../base/variables';
 
 // ============================================
-// TABLE CONTAINER
+// TABLE CONTAINER – prevent page overflow
 // ============================================
 .table-container,
 .table-wrapper {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   overflow-x: auto;
+  overflow-y: visible;
   border-radius: $border-radius-md;
   background-color: $color-bg-primary;
+  -webkit-overflow-scrolling: touch;
 }
 
 // ============================================
@@ -37,7 +42,7 @@ thead {
 
 .table-header,
 th {
-  padding: $spacing-md $spacing-lg;
+  padding: $spacing-sm $spacing-md;
   text-align: left;
   font-size: $font-size-sm;
   font-weight: $font-weight-bold;
@@ -45,6 +50,10 @@ th {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   white-space: nowrap;
+
+  @media (min-width: $breakpoint-sm) {
+    padding: $spacing-md $spacing-lg;
+  }
 }
 
 // ============================================
@@ -77,36 +86,65 @@ tbody {
 
 .table-cell,
 td {
-  padding: $spacing-md $spacing-lg;
-  font-size: $font-size-md;
+  padding: $spacing-sm $spacing-md;
+  font-size: $font-size-sm;
   color: $color-text-primary;
-  white-space: nowrap;
-  
+
+  @media (min-width: $breakpoint-sm) {
+    padding: $spacing-md $spacing-lg;
+    font-size: $font-size-md;
+  }
+
   &.cell-name {
     font-weight: $font-weight-medium;
   }
-  
+
   &.cell-code {
     font-family: monospace;
     color: $color-text-secondary;
   }
-  
+
   &.cell-phone {
     color: $color-text-secondary;
   }
-  
+
   &.cell-age {
     text-align: center;
   }
-  
+
   &.cell-gender {
     text-transform: capitalize;
   }
-  
+
+  &.cell-complaint {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    @media (min-width: $breakpoint-sm) {
+      max-width: 180px;
+    }
+  }
+
   &.cell-actions {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: $spacing-sm;
+    gap: $spacing-xs;
+    white-space: nowrap;
+
+    .btn-small {
+      min-height: 36px;
+      padding: $spacing-xs $spacing-sm;
+      font-size: $font-size-xs;
+
+      @media (min-width: $breakpoint-xs) {
+        min-height: $touch-target-min;
+        padding: $spacing-sm $spacing-md;
+        font-size: $font-size-sm;
+      }
+    }
   }
   
   &.cell-empty,
@@ -182,21 +220,28 @@ td {
 }
 
 // ============================================
-// RESPONSIVE TABLE
+// RESPONSIVE TABLE – horizontal scroll on small screens
 // ============================================
-@media (max-width: 768px) {
-  .table-container {
-    overflow-x: scroll;
-    -webkit-overflow-scrolling: touch;
+.data-table {
+  width: 100%;
+  min-width: 0;
+
+  @media (max-width: $breakpoint-sm) {
+    min-width: 560px; // Allows horizontal scroll; keeps columns readable
   }
-  
-  .data-table {
-    min-width: 600px;
+}
+
+.card-header {
+  @media (max-width: $breakpoint-xs) {
+    padding: $spacing-md;
   }
-  
-  .table-header,
-  .table-cell {
-    padding: $spacing-sm $spacing-md;
-    font-size: $font-size-sm;
+}
+
+.view-all-btn {
+  min-height: 36px;
+  padding: $spacing-sm $spacing-md;
+
+  @media (min-width: $breakpoint-xs) {
+    min-height: $touch-target-min;
   }
 }

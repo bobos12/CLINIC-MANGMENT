@@ -28,17 +28,51 @@ const VisitDetails = () => {
     if (token) loadVisit();
   }, [id, token]);
 
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString();
+  const formatDate = (dateString) => dateString ? new Date(dateString).toLocaleDateString() : "-";
+
+  // Helper to render history items
+  const renderHistory = (historyObj) => {
+    if (!historyObj || Object.keys(historyObj).length === 0) return "-";
+
+    return (
+      <ul className="detail-list">
+        {Object.entries(historyObj).map(([key, item]) => {
+          const years = item?.years || 0;
+          const months = item?.months || 0;
+          const days = item?.days || 0;
+          const durationParts = [];
+          if (years) durationParts.push(`${years}y`);
+          if (months) durationParts.push(`${months}m`);
+          if (days) durationParts.push(`${days}d`);
+          const duration = durationParts.length > 0 ? `(${durationParts.join(" ")})` : "";
+          const eye = item?.eye ? ` [${item.eye}]` : "";
+          return <li key={key}>{key} {duration}{eye}</li>;
+        })}
+      </ul>
+    );
   };
 
-  if (loading) {
-    return (
-      <div className="loading-container">
-        <div className="spinner"></div>
-      </div>
-    );
-  }
+  // Helper to render eye exam fields
+  const renderEyeValue = (eyeValue) => {
+    if (!eyeValue) return "-";
+
+    // If object with values/other
+    if (typeof eyeValue === "object") {
+      const hasValues = eyeValue.values && eyeValue.values.length > 0;
+      const hasOther = eyeValue.other && eyeValue.other.trim() !== "";
+      if (!hasValues && !hasOther) return "-";
+      return (
+        <>
+          {hasValues && <div className="exam-values-list">{eyeValue.values.join(", ")}</div>}
+          {hasOther && <div className="exam-other-text">{hasValues && "• "} {eyeValue.other}</div>}
+        </>
+      );
+    }
+
+    return eyeValue || "-";
+  };
+
+  if (loading) return <div className="loading-container"><div className="spinner"></div></div>;
 
   return (
     <div className="details-page">
@@ -48,103 +82,46 @@ const VisitDetails = () => {
 
           {visit && (
             <>
+              {/* Header */}
               <div className="details-header">
                 <h1 className="details-title">👁️ {visit.patientId?.name || "Visit"}</h1>
                 <div className="details-actions">
-                  <button
-                    className="btn btn-secondary"
-                    onClick={() => navigate(`/visits/edit/${visit._id}`)}
-                  >
-                    ✏️ Edit
-                  </button>
-                  <button
-                    className="btn btn-cancel"
-                    onClick={() => navigate("/visits")}
-                  >
-                    ← Back
-                  </button>
+                  <button className="btn btn-secondary" onClick={() => navigate(`/visits/edit/${visit._id}`)}>✏️ Edit</button>
+                  <button className="btn btn-cancel" onClick={() => navigate("/visits")}>← Back</button>
                 </div>
               </div>
 
-              {/* Visit Information */}
+              {/* Visit Info */}
               <div className="details-section">
                 <h3 className="section-title">📋 Visit Information</h3>
-                <div className="detail-row">
-                  <div className="detail-label">Patient</div>
-                  <div className="detail-value">{visit.patientId?.name || "-"}</div>
-                </div>
-                <div className="detail-row">
-                  <div className="detail-label">Doctor</div>
-                  <div className="detail-value">{visit.doctorId?.name || "-"}</div>
-                </div>
-                <div className="detail-row">
-                  <div className="detail-label">Visit Date</div>
-                  <div className="detail-value">{formatDate(visit.visitDate)}</div>
-                </div>
-                <div className="detail-row">
-                  <div className="detail-label">Follow-up Date</div>
-                  <div className="detail-value">
-                    {visit.followUpDate ? formatDate(visit.followUpDate) : "N/A"}
+                <div className="detail-row"><div className="detail-label">Patient</div><div className="detail-value">{visit.patientId?.name || "-"}</div></div>
+                <div className="detail-row"><div className="detail-label">Doctor</div><div className="detail-value">{visit.doctorId?.name || "-"}</div></div>
+                <div className="detail-row"><div className="detail-label">Visit Date</div><div className="detail-value">{formatDate(visit.visitDate)}</div></div>
+                <div className="detail-row"><div className="detail-label">Follow-up Date</div><div className="detail-value">{formatDate(visit.followUpDate)}</div></div>
+                {visit.followUp && (visit.followUp.years || visit.followUp.months || visit.followUp.days) && (
+                  <div className="detail-row">
+                    <div className="detail-label">Follow-up Period</div>
+                    <div className="detail-value">
+                      {[visit.followUp.years && `${visit.followUp.years}y`, visit.followUp.months && `${visit.followUp.months}m`, visit.followUp.days && `${visit.followUp.days}d`].filter(Boolean).join(" ") || "-"}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
 
               {/* Patient History */}
               <div className="details-section">
                 <h3 className="section-title">📝 Patient History</h3>
-                
-                {/* Chief Complaint */}
                 <div className="detail-row">
                   <div className="detail-label">Chief Complaint</div>
-                  <div className="detail-value">
-                    {visit.complaint && Object.keys(visit.complaint).length > 0 ? (
-                      <ul className="detail-list">
-                        {Object.entries(visit.complaint).map(([complaint, years]) => (
-                          <li key={complaint}>
-                            {complaint}
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      "-"
-                    )}
-                  </div>
+                  <div className="detail-value">{renderHistory(visit.complaint)}</div>
                 </div>
-
-                {/* Medical History */}
                 <div className="detail-row">
                   <div className="detail-label">Medical History</div>
-                  <div className="detail-value">
-                    {visit.medicalHistory && Object.keys(visit.medicalHistory).length > 0 ? (
-                      <ul className="detail-list">
-                        {Object.entries(visit.medicalHistory).map(([condition, years]) => (
-                          <li key={condition}>
-                            {condition} {years > 0 && `(${years} years)`}
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      "-"
-                    )}
-                  </div>
+                  <div className="detail-value">{renderHistory(visit.medicalHistory)}</div>
                 </div>
-
-                {/* Surgical History */}
                 <div className="detail-row">
                   <div className="detail-label">Surgical History</div>
-                  <div className="detail-value">
-                    {visit.surgicalHistory && Object.keys(visit.surgicalHistory).length > 0 ? (
-                      <ul className="detail-list">
-                        {Object.entries(visit.surgicalHistory).map(([procedure, years]) => (
-                          <li key={procedure}>
-                            {procedure} {years > 0 && `(${years} years)`}
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      "-"
-                    )}
-                  </div>
+                  <div className="detail-value">{renderHistory(visit.surgicalHistory)}</div>
                 </div>
               </div>
 
@@ -154,104 +131,53 @@ const VisitDetails = () => {
                 {visit.eyeExam ? (
                   <div className="exam-grid">
                     {Object.entries(visit.eyeExam).map(([key, value]) => {
-                      // Handle nested structures (refraction, oldGlasses)
-                      if (
-                        (key === "refraction" || key === "oldGlasses") &&
-                        value &&
-                        typeof value === "object" &&
-                        value.OD &&
-                        typeof value.OD === "object"
-                      ) {
+                      if (!value) return null;
+
+                      // Handle prescription-style objects (oldGlasses, refraction, newPrescription)
+                      const isPrescriptionCard = (key === "refraction" || key === "oldGlasses" || key === "newPrescription") && value.OD != null && value.OS != null;
+                      if (isPrescriptionCard) {
                         return (
                           <div key={key} className="exam-card nested-exam-card">
-                            <div className="exam-field-label">
-                              {key.replace(/([A-Z])/g, " $1").trim()}
-                            </div>
+                            <div className="exam-field-label">{key.replace(/([A-Z])/g, " $1").trim()}</div>
                             <div className="nested-exam-values">
-                              <div className="nested-eye">
-                                <div className="exam-value-label">OD (Right)</div>
-                                <div className="nested-values">
-                                  {value.OD.sphere && (
-                                    <div>Sphere: {value.OD.sphere}</div>
-                                  )}
-                                  {value.OD.cylinder && (
-                                    <div>Cylinder: {value.OD.cylinder}</div>
-                                  )}
-                                  {value.OD.axis && (
-                                    <div>Axis: {value.OD.axis}</div>
-                                  )}
-                                  {!value.OD.sphere && !value.OD.cylinder && !value.OD.axis && <div>-</div>}
+                              {["OD", "OS"].map((eye) => (
+                                <div key={eye} className="nested-eye">
+                                  <div className="exam-value-label">{eye === "OD" ? "OD (Right)" : "OS (Left)"}</div>
+                                  <div className="nested-values">
+                                    {value[eye].sphere != null && value[eye].sphere !== "" && <div>Sphere: {value[eye].sphere}</div>}
+                                    {value[eye].cylinder != null && value[eye].cylinder !== "" && <div>Cylinder: {value[eye].cylinder}</div>}
+                                    {value[eye].axis != null && value[eye].axis !== "" && <div>Axis: {value[eye].axis}</div>}
+                                    {value[eye].ADD != null && value[eye].ADD !== "" && <div>ADD: {value[eye].ADD}</div>}
+                                    {!value[eye].sphere && !value[eye].cylinder && !value[eye].axis && !value[eye].ADD && <div>-</div>}
+                                  </div>
                                 </div>
-                              </div>
-                              <div className="nested-eye">
-                                <div className="exam-value-label">OS (Left)</div>
-                                <div className="nested-values">
-                                  {value.OS && value.OS.sphere && (
-                                    <div>Sphere: {value.OS.sphere}</div>
-                                  )}
-                                  {value.OS && value.OS.cylinder && (
-                                    <div>Cylinder: {value.OS.cylinder}</div>
-                                  )}
-                                  {value.OS && value.OS.axis && (
-                                    <div>Axis: {value.OS.axis}</div>
-                                  )}
-                                  {!value.OS || (!value.OS.sphere && !value.OS.cylinder && !value.OS.axis) && <div>-</div>}
-                                </div>
-                              </div>
+                              ))}
                             </div>
                           </div>
                         );
                       }
 
-                      // Handle fields with values array and other text (new structure)
-                      if (value && typeof value === "object" && (value.OD || value.OS)) {
-                        const renderEyeValue = (eyeValue) => {
-                          // If it's an object with values and other properties
-                          if (eyeValue && typeof eyeValue === "object" && 
-                              (eyeValue.values || eyeValue.other)) {
-                            const hasValues = eyeValue.values && eyeValue.values.length > 0;
-                            const hasOther = eyeValue.other && eyeValue.other.trim() !== "";
-                            
-                            if (!hasValues && !hasOther) return "-";
-                            
-                            return (
-                              <>
-                                {hasValues && (
-                                  <div className="exam-values-list">
-                                    {eyeValue.values.join(", ")}
-                                  </div>
-                                )}
-                                {hasOther && (
-                                  <div className="exam-other-text">
-                                    {hasValues && "• "}
-                                    {eyeValue.other}
-                                  </div>
-                                )}
-                              </>
-                            );
-                          }
-                          // Simple string value
-                          return eyeValue || "-";
-                        };
-
+                      // IOP: simple OD/OS values
+                      if (key === "iop" && (value.OD != null || value.OS != null)) {
                         return (
                           <div key={key} className="exam-card">
-                            <div className="exam-field-label">
-                              {key.replace(/([A-Z])/g, " $1").trim()}
-                            </div>
+                            <div className="exam-field-label">IOP (mmHg)</div>
                             <div className="exam-values">
-                              {value.OD && (
-                                <div>
-                                  <div className="exam-value-label">OD (Right)</div>
-                                  <div className="exam-value">{renderEyeValue(value.OD)}</div>
-                                </div>
-                              )}
-                              {value.OS && (
-                                <div>
-                                  <div className="exam-value-label">OS (Left)</div>
-                                  <div className="exam-value">{renderEyeValue(value.OS)}</div>
-                                </div>
-                              )}
+                              {value.OD != null && value.OD !== "" && <div><div className="exam-value-label">OD (Right)</div><div className="exam-value">{value.OD}</div></div>}
+                              {value.OS != null && value.OS !== "" && <div><div className="exam-value-label">OS (Left)</div><div className="exam-value">{value.OS}</div></div>}
+                            </div>
+                          </div>
+                        );
+                      }
+
+                      // Normal eye fields with values/other
+                      if (value.OD || value.OS) {
+                        return (
+                          <div key={key} className="exam-card">
+                            <div className="exam-field-label">{key.replace(/([A-Z])/g, " $1").trim()}</div>
+                            <div className="exam-values">
+                              {value.OD && <div><div className="exam-value-label">OD (Right)</div><div className="exam-value">{renderEyeValue(value.OD)}</div></div>}
+                              {value.OS && <div><div className="exam-value-label">OS (Left)</div><div className="exam-value">{renderEyeValue(value.OS)}</div></div>}
                             </div>
                           </div>
                         );

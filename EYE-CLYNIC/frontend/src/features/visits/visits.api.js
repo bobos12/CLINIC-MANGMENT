@@ -11,7 +11,7 @@ export const fetchVisits = async (token, filters = {}) => {
       headers: { Authorization: `Bearer ${token}` },
       params: filters,
     });
-    return response.data;
+    return Array.isArray(response.data) ? response.data : [];
   } catch (error) {
     throw new Error(error.message || "Failed to fetch visits");
   }

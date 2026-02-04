@@ -1,25 +1,30 @@
 // ============================================
 // VISUAL ACUITY STEP STYLES
+// Two-panel layout: OD | OS (see .eye-panels in _visit-form-base.scss)
 // ============================================
 
 @import '../../base/variables';
 
 // ============================================
-// VISUAL ACUITY
+// VISUAL ACUITY (inside each .eye-side)
 // ============================================
-.visual-acuity-container {
-  padding: $spacing-xl;
-  background: $grey-50;
-  border-radius: $border-radius-lg;
-  border: $border-width-medium solid $grey-200;
-}
-
 .visual-acuity-label {
   display: block;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-sm;
+}
+
+.acuity-value-inline {
+  margin-top: $spacing-md;
   font-size: $font-size-lg;
   font-weight: $font-weight-bold;
-  color: $color-text-primary;
-  margin-bottom: $spacing-lg;
+  color: $color-primary;
+  padding: $spacing-sm;
+  background: $grey-50;
+  border-radius: $border-radius-md;
+  text-align: center;
 }
 
 .visual-acuity-grid {
@@ -31,7 +36,7 @@
     grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: $breakpoint-sm) {
     grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
   }
   
@@ -64,22 +69,6 @@
   }
 }
 
-.visual-acuity-summary {
-  margin-top: $spacing-lg;
-  padding: $spacing-lg;
-  background: $color-bg-primary;
-  border-radius: $border-radius-md;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  border: $border-width-thin solid $grey-200;
-  
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: $spacing-md;
-  }
-}
-
 .acuity-display {
   text-align: center;
 }
@@ -92,16 +81,7 @@
 }
 
 .acuity-value {
-  font-size: 24px;
+  font-size: 1.25rem;
   font-weight: $font-weight-bold;
   color: $color-primary;
-}
-
-.acuity-separator {
-  font-size: 24px;
-  color: $grey-300;
-  
-  @media (max-width: 768px) {
-    display: none;
-  }
 }

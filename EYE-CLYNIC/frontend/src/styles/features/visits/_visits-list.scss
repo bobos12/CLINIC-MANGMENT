@@ -30,18 +30,20 @@
 }
 
 // ============================================
-// RESPONSIVE
+// RESPONSIVE – use breakpoint variables
 // ============================================
-@media (max-width: 768px) {
+@media (max-width: $breakpoint-sm) {
   .header-title-section {
     width: 100%;
-    
+
     .btn-small {
       width: 100%;
     }
   }
-  
+}
+
+@media (max-width: $breakpoint-xs) {
   .cell-complaint {
-    max-width: 150px;
+    max-width: 100px;
   }
 }

@@ -4,37 +4,39 @@
 
 @import '../../../styles/base/variables';
 
+// Step indicator: horizontal scroll on small screens; touch-friendly items
 .step-indicator {
   display: flex;
   gap: $spacing-sm;
   margin-bottom: 0;
   overflow-x: auto;
-  padding: $spacing-lg $spacing-xl;
-  scrollbar-width: none;
+  overflow-y: hidden;
+  padding: $spacing-md $spacing-lg;
   flex-shrink: 0;
   background-color: $grey-50;
   border-bottom: $border-width-thin solid $grey-200;
-  
+  -webkit-overflow-scrolling: touch;
+
   &::-webkit-scrollbar {
     display: none;
   }
-  
-  @media (max-width: 768px) {
-    padding: $spacing-md;
-    gap: $spacing-xs;
+
+  @media (min-width: $breakpoint-sm) {
+    padding: $spacing-lg $spacing-xl;
   }
 }
 
 .step-item {
-  flex: 1;
-  min-width: 120px;
-  padding: $spacing-md $spacing-lg;
+  flex: 0 0 auto;
+  min-width: 80px;
+  padding: $spacing-sm $spacing-md;
+  min-height: $touch-target-min;
   background: $color-bg-primary;
   border: $border-width-thin solid $grey-300;
   border-radius: $border-radius-md;
   color: $color-text-secondary;
   font-weight: $font-weight-medium;
-  font-size: $font-size-sm;
+  font-size: $font-size-xs;
   cursor: pointer;
   transition: all $transition-base;
   box-shadow: none;
@@ -42,23 +44,24 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: $spacing-xs;
-  
+
   &:disabled {
     cursor: not-allowed;
     opacity: 0.5;
   }
-  
+
   &.clickable:not(:disabled) {
     cursor: pointer;
-    
+
     &:hover {
       border-color: $color-primary;
       color: $color-primary;
       box-shadow: $shadow-sm;
     }
   }
-  
+
   &.active {
     background: $color-primary;
     border-color: $color-primary;
@@ -67,58 +70,67 @@
     font-weight: $font-weight-bold;
     transform: scale(1.02);
   }
-  
+
   &.completed {
     background: rgba($color-success, 0.1);
     border-color: $color-success;
     color: $color-success;
-    
+
     &:hover:not(:disabled) {
       background: rgba($color-success, 0.15);
     }
   }
-  
-  @media (max-width: 768px) {
+
+  @media (min-width: $breakpoint-sm) {
+    flex: 1;
     min-width: 100px;
-    padding: $spacing-sm $spacing-md;
-    font-size: $font-size-xs;
+    padding: $spacing-md $spacing-lg;
+    font-size: $font-size-sm;
+  }
+  @media (min-width: $breakpoint-md) {
+    min-width: 120px;
   }
 }
 
 .step-icon {
-  font-size: 24px;
-  margin-bottom: $spacing-xs;
+  font-size: 20px;
   line-height: 1;
-  
-  @media (max-width: 768px) {
-    font-size: 20px;
+  flex-shrink: 0;
+
+  @media (min-width: $breakpoint-sm) {
+    font-size: 24px;
+    margin-bottom: $spacing-xs;
   }
 }
 
 .step-label {
-  font-size: $font-size-sm;
+  font-size: $font-size-xs;
   text-align: center;
   transition: color $transition-base;
-  white-space: nowrap;
   line-height: 1.2;
-  
-  @media (max-width: 768px) {
-    font-size: $font-size-xs;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+
+  @media (min-width: $breakpoint-sm) {
+    font-size: $font-size-sm;
   }
 }
 
-@media (max-width: 768px) {
+// On very small screens show compact step pills (label hidden)
+@media (max-width: $breakpoint-xs) {
   .step-indicator {
-    padding: $spacing-md;
+    padding: $spacing-sm $spacing-md;
+    gap: $spacing-xs;
   }
-  
+
+  .step-item {
+    min-width: 64px;
+    padding: $spacing-xs $spacing-sm;
+  }
+
   .step-label {
     display: none;
-  }
-  
-  .step-number {
-    width: 32px;
-    height: 32px;
-    font-size: $font-size-sm;
   }
 }

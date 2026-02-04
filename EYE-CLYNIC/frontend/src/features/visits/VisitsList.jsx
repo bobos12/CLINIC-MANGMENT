@@ -24,7 +24,7 @@ const VisitsList = () => {
     try {
       const data = await fetchVisits(token);
       
-      let filteredVisits = data;
+      let filteredVisits = Array.isArray(data) ? data : [];
       
       // Filter by patient if patientId is provided
       if (patientIdFilter) {
@@ -37,7 +37,7 @@ const VisitsList = () => {
         }
       }
       
-      setVisits(filteredVisits);
+      setVisits(Array.isArray(filteredVisits) ? filteredVisits : []);
     } catch (err) {
       console.error(err);
       setError(err.message || "Failed to fetch visits");

@@ -21,32 +21,58 @@ const visitSchema = new mongoose.Schema({
   // Patient history (all optional for quick recording)
   complaint: {
     type: Map,
-    of: Number, // { "Decreased vision far or near": 0, "Seeking glasses": 0, ... }
-    default: {}
+    of: new mongoose.Schema({
+      years: { type: Number, min: 0 },
+      months: { type: Number, min: 0, max: 12 },
+      days: { type: Number, min: 0, max: 31 },
+      value: { type: String, trim: true },
+      eye: { type: String, enum: ['Right', 'Left', 'Both'], default: 'Both' },
+    }),
+    default: {},
   },
   medicalHistory: {
     type: Map,
-    of: Number, // { "DM": 5, "HTN": 3, ... } - number is years
-    default: {}
+    of: new mongoose.Schema({
+      years: { type: Number, min: 0 },
+      months: { type: Number, min: 0, max: 12 },
+      days: { type: Number, min: 0, max: 31 },
+      value: { type: String, trim: true },
+      eye: { type: String, enum: ['Right', 'Left', 'Both'], default: 'Both' },
+    }),
+    default: {},
   },
   surgicalHistory: {
     type: Map,
-    of: Number, // { "Cataract": 2, "Refractive": 1, ... } - number is years
-    default: {}
+    of: new mongoose.Schema({
+      years: { type: Number, min: 0 },
+      months: { type: Number, min: 0, max: 12 },
+      days: { type: Number, min: 0, max: 31 },
+      value: { type: String, trim: true },
+      eye: { type: String, enum: ['Right', 'Left', 'Both'], default: 'Both' },
+    }),
+    default: {},
   },
   
-  // Eye Examination structure kept intact (OD = Right eye, OS = Left eye)
+  // Eye Examination structure (OD = Right eye, OS = Left eye)
   eyeExam: {
-    visualAcuity: { OD: String, OS: String }, // Options: "0.1-1", "2", "3", "4", "5m", "CF", "HM", "PL", "NPL"
-    oldGlasses: { 
-      OD: { sphere: String, cylinder: String, axis: String }, 
-      OS: { sphere: String, cylinder: String, axis: String } 
+    visualAcuity: { OD: String, OS: String },
+    oldGlasses: {
+      OD: { sphere: String, cylinder: String, axis: String },
+      OS: { sphere: String, cylinder: String, axis: String }
     },
-    refraction: { 
-      OD: { sphere: String, cylinder: String, axis: String }, 
-      OS: { sphere: String, cylinder: String, axis: String } 
+    refraction: {
+      OD: { sphere: String, cylinder: String, axis: String, ADD: String },
+      OS: { sphere: String, cylinder: String, axis: String, ADD: String }
     },
-    externalAppearance: { OD: String, OS: String },
+    newPrescription: {
+      OD: { sphere: String, cylinder: String, axis: String },
+      OS: { sphere: String, cylinder: String, axis: String }
+    },
+    iop: { OD: mongoose.Schema.Types.Mixed, OS: mongoose.Schema.Types.Mixed }, // IOP in mmHg (string or number)
+    externalAppearance: {
+      OD: { values: [String], other: String },
+      OS: { values: [String], other: String }
+    },
     // Fields with option buttons store { values: [array of selected options], other: "text" }
     ocularMotility: { 
       OD: { values: [String], other: String }, 
@@ -64,12 +90,18 @@ const visitSchema = new mongoose.Schema({
       OD: { values: [String], other: String }, 
       OS: { values: [String], other: String } 
     },
-    sclera: { OD: String, OS: String },
+    sclera: {
+      OD: { values: [String], other: String },
+      OS: { values: [String], other: String }
+    },
     anteriorChamber: { 
       OD: { values: [String], other: String }, 
       OS: { values: [String], other: String } 
     },
-    iris: { OD: String, OS: String },
+    iris: {
+      OD: { values: [String], other: String },
+      OS: { values: [String], other: String }
+    },
     pupil: { 
       OD: { values: [String], other: String }, 
       OS: { values: [String], other: String } 
@@ -78,7 +110,10 @@ const visitSchema = new mongoose.Schema({
       OD: { values: [String], other: String }, 
       OS: { values: [String], other: String } 
     },
-    posteriorSegment: { OD: String, OS: String },
+    posteriorSegment: {
+      OD: { values: [String], other: String },
+      OS: { values: [String], other: String }
+    },
     others: { OD: String, OS: String } // Additional notes for any other findings
   },
   
@@ -86,6 +121,11 @@ const visitSchema = new mongoose.Schema({
   recommendations: {
     type: String,
     trim: true
+  },
+  followUp: {
+    years: { type: Number, min: 0 },
+    months: { type: Number, min: 0, max: 12 },
+    days: { type: Number, min: 0, max: 31 }
   },
   followUpDate: {
     type: Date
